@@ -23,6 +23,27 @@ exécute ce que le backend décide, elle ne réinvente aucune logique IA.
   - iOS : limite structurelle réelle, voir `ios/README.md` — pas de chiffres
     bruts par app sans compte Apple Developer + entitlement Family Controls.
 
+## État au 23/08/2026 (Lot 2 — fichiers/dossiers désignés)
+
+- Android : sélecteur système (`ActivityResultContracts.OpenDocumentTree`),
+  permission URI persistante (`takePersistableUriPermission`), CRUD via
+  `DocumentFile`/`DocumentsContract` (`DossiersDesignesRepository.kt`),
+  écran `DossiersScreen.kt` (liste des dossiers désignés + navigation dans
+  un dossier + créer/renommer/supprimer/déplacer).
+- iOS : `UIDocumentPickerViewController` (mode `.folder`) + security-scoped
+  bookmarks (`DossiersDesignesRepository.swift`), même CRUD via
+  `FileManager`. Différence structurelle avec Android à noter : iOS exige
+  d'ouvrir/fermer l'accès sécurisé à **chaque** opération
+  (`start/stopAccessingSecurityScopedResource`), ce n'est pas une permission
+  acquise une fois pour toutes côté système comme sur Android — géré via le
+  wrapper `avecAcces(...)`.
+- Les deux plateformes ont désormais une barre de navigation (bottom nav
+  Android / TabView iOS) avec deux onglets Usage/Dossiers, en prévision des
+  lots 3 à 5.
+- Niveau d'accès : create/read/rename/delete/move testés au niveau du code
+  sur les deux plateformes — équivalence Android/iOS non encore vérifiée
+  sur appareil réel, voir avertissement ci-dessous.
+
 ## ⚠️ Important : rien de tout ça n'a été compilé ni testé
 
 Cet environnement (sandbox Claude) n'a ni Android Studio/Gradle/SDK Android,
@@ -50,6 +71,6 @@ chantier (`00-commun.md`), pas juste une formalité.
 
 ## Prochains lots
 
-Fichiers/dossiers désignés, notifications & rappels, contrôles de session,
-connecteurs tiers (lots 2 à 5, communs). Accessibilité (lots 6 à 8, flavor
-`externe` uniquement, jamais iOS) — pas commencés.
+Notifications & rappels, contrôles de session, connecteurs tiers (lots 3 à
+5, communs). Accessibilité (lots 6 à 8, flavor `externe` uniquement, jamais
+iOS) — pas commencés.

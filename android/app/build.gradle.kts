@@ -77,4 +77,11 @@ dependencies {
     implementation(platform("io.github.jan-tennert.supabase:bom:2.6.1"))
     implementation("io.github.jan-tennert.supabase:auth-kt")
     implementation("io.ktor:ktor-client-android:2.3.12")
+
+    // Lot 2 : DocumentFile, wrapper autour de Storage Access Framework (SAF)
+    // pour naviguer/creer/renommer/supprimer/deplacer dans un dossier designe.
+    implementation("androidx.documentfile:documentfile:1.0.1")
+    // Icones Folder/CreateNewFolder/NoteAdd/InsertDriveFile absentes du set
+    // "core" de Compose -- necessaires pour DossiersScreen.kt (Lot 2).
+    implementation("androidx.compose.material:material-icons-extended")
 }
