@@ -65,7 +65,8 @@ Bourama : continuer, tout tester ensemble plus tard).
   sonnerie/notifications, via la permission spéciale "Accès à la Politique de
   Notification" (`ACCESS_NOTIFICATION_POLICY`, ajoutée au manifeste commun).
   État initial capturé avant modification et restauré exactement à l'arrêt.
-  Navigation à deux onglets ajoutée dans `MainActivity.kt` (Session / Usage).
+  Onglet "Session" ajouté à la barre de navigation existante (Session /
+  Usage / Dossiers), en premier onglet.
 - **iOS** : nouvel écran `ControleSessionScreen.swift`. Le minuteur
   fonctionne pareil qu'Android. **DND/Focus et volume système : impossibles
   pour une app tierce sur iOS**, vérifié et documenté plutôt que simulé (voir
@@ -94,6 +95,6 @@ Bourama : continuer, tout tester ensemble plus tard).
 
 ## Prochains lots
 
-Notifications & rappels, contrôles de session, connecteurs tiers (lots 3 à
-5, communs). Accessibilité (lots 6 à 8, flavor `externe` uniquement, jamais
-iOS) — pas commencés.
+Notifications & rappels, connecteurs tiers (lots 3 et 5, communs).
+Accessibilité (lots 6 à 8, flavor `externe` uniquement, jamais iOS) — pas
+commencés.
