@@ -11,5 +11,18 @@
     -->
     <key>com.apple.developer.family-controls</key>
     <true/>
+
+    <!--
+        Lot 3, 23/08/2026 : entitlement Push Notifications, necessaire pour
+        qu'APNs accepte d'enregistrer l'app (didRegisterForRemoteNotificationsWithDeviceToken).
+        Se coche normalement depuis Xcode (Signing & Capabilities > + Push
+        Notifications), qui gere aussi la creation du profil de
+        provisionnement associe -- necessite le compte Apple Developer
+        Program (meme dependance que family-controls ci-dessus, voir
+        ios/README.md). "development" ici ; Xcode bascule automatiquement
+        sur "production" a l'archivage pour l'App Store.
+    -->
+    <key>aps-environment</key>
+    <string>development</string>
 </dict>
 </plist>

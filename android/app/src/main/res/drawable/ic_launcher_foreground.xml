@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Marque abstraite PROVISOIRE (anneau + point blanc), le temps qu'une
+    vraie identite visuelle Clovis existe -- TODO Bourama. Zone de securite
+    d'icone adaptative : le contenu utile doit rester dans le cercle central
+    de 66dp (Android rogne differemment selon le lanceur du telephone).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M54,27 A27,27 0 1 1 53.9,27 Z M54,39 A15,15 0 1 0 54.1,39 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,48 m-7,0 a7,7 0 1 0 14,0 a7,7 0 1 0 -14,0" />
+</vector>

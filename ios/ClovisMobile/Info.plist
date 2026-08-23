@@ -8,5 +8,30 @@
     <string>0.1.0</string>
     <key>CFBundleVersion</key>
     <string>1</string>
+
+    <!-- Lot 3, 23/08/2026 -- exigee des qu'EventKit/EventKitUI est lie au
+         projet, meme si EKEventEditViewController gere lui-meme sa propre
+         demande d'autorisation (voir RappelsNatifs.swift). -->
+    <key>NSCalendarsUsageDescription</key>
+    <string>Clovis peut t'aider à ajouter des événements à ton calendrier quand tu le lui demandes.</string>
+
+    <!-- Lot 3 -- reveil en arriere-plan pour la reception push APNs.
+         Optionnel dans l'etat actuel (aucun traitement en arriere-plan
+         silencieux n'est fait, juste l'affichage standard d'une
+         notification), mais ameliore la fiabilite de reception -- a
+         retirer si Bourama prefere s'en passer. -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>remote-notification</string>
+    </array>
+
+    <!-- Lot 3 -- schemas d'URL d'apps tierces que Clovis doit pouvoir
+         ouvrir (voir RappelsNatifs.ouvrirApp). VIDE pour l'instant : aucune
+         app specifique n'a ete demandee par Bourama, a completer schema
+         par schema (ex: "whatsapp") le jour ou une liste est fournie --
+         chaque schema absent ici fait echouer canOpenURL() silencieusement. -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+    </array>
 </dict>
 </plist>

@@ -2,8 +2,6 @@
 //
 // Meme canal dedie que cote Android, voir
 // clovis-backend/api/appareils_mobiles.py.
-//
-// TODO Bourama : remplacer baseURL par l'URL Railway reelle de clovis-backend.
 import Foundation
 
 struct EntreeUsage: Codable {
@@ -56,6 +54,13 @@ struct ResultatNotion: Codable, Identifiable {
 
 struct ReponseRechercheNotion: Codable {
     let resultats: [ResultatNotion]
+}
+
+// MARK: - Lot 3 : notifications push natives
+
+struct TokenPush: Codable {
+    let plateforme: String
+    let token: String
 }
 
 enum ClovisApiClient {
@@ -116,5 +121,16 @@ enum ClovisApiClient {
         let requete = try await requeteAuthentifiee(composants.url!, methode: "GET")
         let (data, _) = try await URLSession.shared.data(for: requete)
         return try JSONDecoder().decode(ReponseRechercheNotion.self, from: data)
+    }
+
+    // Ajoute le 23/08/2026, Lot 3 (notifications & rappels) : enregistre le
+    // token APNs aupres de clovis-backend, voir didRegisterForRemoteNotificationsWithDeviceToken
+    // dans ClovisAppDelegate.swift (appele a chaque lancement, le token
+    // APNs peut changer -- meme logique que le token FCM cote Android).
+    static func enregistrerPushToken(_ payload: TokenPush) async throws {
+        let url = URL(string: "\(baseURL)/api/appareils-mobiles/push-token")!
+        var requete = try await requeteAuthentifiee(url, methode: "POST")
+        requete.httpBody = try JSONEncoder().encode(payload)
+        _ = try await URLSession.shared.data(for: requete)
     }
 }

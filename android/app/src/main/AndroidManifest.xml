@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Cree le 23/08/2026, Bourama : Lot 1 Partie 3 (app mobile), socle Android.
+    Etendu 23/08/2026, Lot 3 (notifications & rappels), Lot 4 (controles de
+    session) et Lot 5 (connecteurs tiers) : voir sections marquees ci-dessous.
     Permissions COMMUNES aux deux flavors (play et externe). Toute permission
     specifique a l'accessibilite (lots 6-8) va dans src/externe/AndroidManifest.xml,
     jamais ici -- voir 00-commun.md.
@@ -26,9 +28,39 @@
          une session (Android bloque sinon ce dernier avec SecurityException). -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
+    <!-- Lot 3 -- notification standard, obligatoire a partir d'Android 13
+         (API 33), demandee au runtime (voir RappelsScreen.kt). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Lot 3 -- alerte plein ecran (categorie ALARM). Declaree ici par
+         precaution, MAIS voir CanalNotifications.kt : depuis la politique
+         Google Play 2025, accordee automatiquement seulement aux apps
+         classees appels/alarme -- Clovis n'en fait pas partie, repli
+         heads-up prevu cote code si refusee. -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <!-- Lot 3 -- visibilite de packages (Android 11+, voir RappelsNatifs.kt
+         pour le detail de cette restriction et son impact sur l'ouverture
+         d'app tierce). Seules les apps natives Horloge/Calendrier sont
+         couvertes ici via leurs ACTIONS (pas de package explicite requis) ;
+         toute app tierce nommee par l'etudiant necessiterait d'ajouter son
+         package ici un par un -- pas fait tant que Bourama n'a pas confirme
+         lesquelles. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SET_ALARM" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.INSERT" />
+            <data android:mimeType="vnd.android.cursor.item/event" />
+        </intent>
+    </queries>
+
     <application
+        android:name=".ClovisApplication"
         android:label="Clovis"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:allowBackup="false">
 
@@ -59,6 +91,53 @@
                 <data android:scheme="clovismobile" android:host="oauth-callback" />
             </intent-filter>
         </activity>
+
+        <!-- Lot 3 -- cible de l'alerte plein ecran (voir NotificationsNatives.kt).
+             exported=false : jamais lancee par une autre app, uniquement en
+             interne via PendingIntent. -->
+        <activity
+            android:name=".notifications.AlerteRappelActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar"
+            android:excludeFromRecents="true" />
+
+        <!-- Lot 3 -- reception des notifications push (voir
+             clovis-backend/core/notifications_push.py). exported=false :
+             seul le systeme (via le SDK Firebase) peut demarrer ce service. -->
+        <service
+            android:name=".notifications.ClovisFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Lot 3 -- tuile reglages rapides (option A du raccourci "Clovis
+             partout", voir ClovisTileService.kt). Permission BIND_QUICK_SETTINGS_TILE
+             obligatoire : seul le systeme peut se lier a ce service. -->
+        <service
+            android:name=".notifications.ClovisTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_clovis_notification"
+            android:label="Clovis"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <!-- Lot 3 -- widget ecran d'accueil (option A du raccourci, voir
+             ClovisWidgetProvider.kt). -->
+        <receiver
+            android:name=".notifications.ClovisWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/clovis_widget_info" />
+        </receiver>
 
     </application>
 </manifest>

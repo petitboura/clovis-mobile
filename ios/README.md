@@ -65,3 +65,55 @@ remonter à Bourama tel quel (fait), plutôt que de forcer quelque chose — voi
 l'entitlement demandé, ajouter le target `DeviceActivityReportExtension`
 dans Xcode et brancher le rendu (commentaire TODO déjà en place dans
 `UsageScreen.swift`).
+
+## Lot 3 (notifications & rappels), 23/08/2026
+
+**Étapes Xcode supplémentaires pour ce lot :**
+
+6. Signing & Capabilities → ajouter la capacité **Push Notifications**
+   (coche l'entitlement `aps-environment`, déjà présent dans
+   `ClovisMobile.entitlements`) — nécessite le compte Apple Developer
+   Program (même dépendance que Family Controls, voir plus haut).
+7. Les frameworks `EventKit`, `EventKitUI`, `UserNotifications`, `AppIntents`
+   sont tous des frameworks système Apple, aucune dépendance externe à
+   ajouter pour eux.
+
+**Limite réelle vérifiée : alerte plein écran**
+
+Recherche faite avant de coder ce lot : iOS n'a **aucun équivalent** à
+l'alerte plein écran par-dessus le verrouillage qu'Android autorise (même
+partiellement) pour une app tierce classique. Cette capacité est réservée
+historiquement à CallKit (`PKPushRegistry` + `CXProvider`), un cadre conçu
+pour simuler un appel entrant — l'utiliser pour un simple rappel d'étude
+serait un détournement que l'App Store review rejette. Remplacé ici par
+`UNNotificationInterruptionLevel.timeSensitive` (traverse Ne pas déranger,
+mais reste une notification standard, pas un écran plein) — voir
+`Sources/Notifications/NotificationsNatives.swift`.
+
+**Ce qui EST fait dans ce lot côté iOS :**
+- Enregistrement APNs (`ClovisAppDelegate.swift`) et envoi du token à
+  `clovis-backend` (`POST /api/appareils-mobiles/push-token`).
+- Notifications locales de test + rappel programmé à une date donnée
+  (équivalent iOS d'une alarme, voir `NotificationsNatives.swift`).
+- Ajout d'événement au calendrier via l'UI native EventKit
+  (`EKEventEditViewController`, l'étudiant confirme avant tout ajout réel).
+- Raccourci Siri/Centre de contrôle "Ouvrir Clovis" via App Intents
+  (`ClovisAppIntent.swift`) — équivalent de la tuile réglages rapides
+  Android, ne nécessite pas de target d'extension séparé.
+
+**Ce qui N'EST PAS fait, à faire dans Xcode directement (pas scriptable
+depuis ce dépôt) :**
+- Widget d'écran d'accueil complet (WidgetKit) — contrairement à App
+  Intents ci-dessus, un widget WidgetKit nécessite un **target
+  d'extension séparé** créé depuis Xcode (File → New → Target → Widget
+  Extension), même chose que `DeviceActivityReportExtension` plus haut.
+  Pas fait dans ce lot, à ajouter si Bourama le demande — le raccourci
+  App Intents couvre déjà le besoin minimal de "Clovis accessible en un
+  geste".
+- Ouverture d'app tierce (`RappelsNatifs.ouvrirApp`) : fonctionne
+  uniquement pour un schéma d'URL explicitement ajouté à
+  `LSApplicationQueriesSchemes` dans `Info.plist` (actuellement vide,
+  aucune app demandée par Bourama) — jamais une liste ouverte comme sur
+  Android avant sa propre restriction de visibilité de packages (voir
+  `clovis-mobile/android/.../RappelsNatifs.kt` pour le détail équivalent
+  côté Android, découvert dans ce même lot).

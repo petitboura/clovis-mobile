@@ -134,4 +134,11 @@ dependencies {
     // Lot 5 : Custom Tabs pour l'OAuth des connecteurs tiers (Notion...),
     // equivalent Android de ASWebAuthenticationSession cote iOS.
     implementation("androidx.browser:browser:1.8.0")
+
+    // Notifications push natives (Lot 3, 23/08/2026) -- initialisees
+    // manuellement via FirebaseOptions (voir ClovisFirebaseApp.kt), donc
+    // seule la dependance firebase-messaging suffit, pas besoin du BOM
+    // Firebase complet ni du plugin google-services.
+    implementation("com.google.firebase:firebase-messaging-ktx:24.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 }

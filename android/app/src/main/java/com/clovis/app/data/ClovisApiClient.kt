@@ -3,10 +3,6 @@
 // Canal dedie entre l'app mobile et clovis-backend, voir
 // clovis-backend/api/appareils_mobiles.py. Meme auth Bearer que
 // clovis-frontend (access_token Supabase), rien de specifique invente ici.
-//
-// TODO Bourama : remplacer BASE_URL par l'URL Railway reelle de
-// clovis-backend en production (et prevoir une variante debug pointant
-// vers localhost/reseau local pour les tests, pas encore fait ici).
 package com.clovis.app.data
 
 import io.ktor.client.HttpClient
@@ -16,6 +12,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
+import io.ktor.client.request.delete
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
@@ -68,6 +65,11 @@ data class ResultatNotion(val id: String, val type: String, val url: String? = n
 
 @Serializable
 data class ReponseRechercheNotion(val resultats: List<ResultatNotion>)
+
+// --- Lot 3 : notifications push natives ---
+
+@Serializable
+data class TokenPush(val plateforme: String, val token: String)
 
 object ClovisApiClient {
 
@@ -124,5 +126,23 @@ object ClovisApiClient {
             avecAuth(this)
         }
         return reponse.body()
+    }
+
+    // Ajoute le 23/08/2026, Lot 3 (notifications & rappels) : enregistre le
+    // token FCM aupres de clovis-backend, voir onNewToken dans
+    // ClovisFirebaseMessagingService.kt (appele a chaque obtention/
+    // renouvellement du token, pas seulement au premier lancement).
+    suspend fun enregistrerPushToken(payload: TokenPush): HttpResponse {
+        return http.post("$BASE_URL/api/appareils-mobiles/push-token") {
+            avecAuth(this)
+            contentType(ContentType.Application.Json)
+            setBody(payload)
+        }
+    }
+
+    suspend fun desinscrirePushToken(token: String): HttpResponse {
+        return http.delete("$BASE_URL/api/appareils-mobiles/push-token?token=$token") {
+            avecAuth(this)
+        }
     }
 }
