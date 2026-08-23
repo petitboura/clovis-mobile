@@ -14,18 +14,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.clovis.app.data.SupabaseAuthClient
+import com.clovis.app.ui.screens.ConnecteursScreen
 import com.clovis.app.ui.screens.DossiersScreen
 import com.clovis.app.ui.screens.LoginScreen
 import com.clovis.app.ui.screens.UsageScreen
 
 private enum class Onglet(val etiquette: String) {
     USAGE("Usage"),
-    DOSSIERS("Dossiers")
+    DOSSIERS("Dossiers"),
+    CONNECTEURS("Connecteurs")
 }
 
 class MainActivity : ComponentActivity() {
@@ -52,6 +55,12 @@ class MainActivity : ComponentActivity() {
                                         icon = { Icon(Icons.Default.Folder, contentDescription = null) },
                                         label = { Text(Onglet.DOSSIERS.etiquette) }
                                     )
+                                    NavigationBarItem(
+                                        selected = ongletActif == Onglet.CONNECTEURS,
+                                        onClick = { ongletActif = Onglet.CONNECTEURS },
+                                        icon = { Icon(Icons.Default.Link, contentDescription = null) },
+                                        label = { Text(Onglet.CONNECTEURS.etiquette) }
+                                    )
                                 }
                             }
                         ) { paddingInterne ->
@@ -59,6 +68,7 @@ class MainActivity : ComponentActivity() {
                                 when (ongletActif) {
                                     Onglet.USAGE -> UsageScreen()
                                     Onglet.DOSSIERS -> DossiersScreen()
+                                    Onglet.CONNECTEURS -> ConnecteursScreen()
                                 }
                             }
                         }

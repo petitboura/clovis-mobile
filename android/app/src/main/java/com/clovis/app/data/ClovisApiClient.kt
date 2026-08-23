@@ -49,6 +49,26 @@ data class LigneUsage(
 @Serializable
 data class ReponseUsage(val usage: List<LigneUsage>)
 
+// --- Lot 5 : connecteurs tiers (Notion) ---
+
+@Serializable
+data class UrlAutorisationNotion(val url_autorisation: String)
+
+@Serializable
+data class FinalisationNotion(val code: String, val state: String)
+
+@Serializable
+data class ReponseFinalisationNotion(val connecte: Boolean, val espace: String? = null)
+
+@Serializable
+data class StatutNotion(val connecte: Boolean)
+
+@Serializable
+data class ResultatNotion(val id: String, val type: String, val url: String? = null)
+
+@Serializable
+data class ReponseRechercheNotion(val resultats: List<ResultatNotion>)
+
 object ClovisApiClient {
 
     private val http = HttpClient(Android) {
@@ -71,6 +91,36 @@ object ClovisApiClient {
 
     suspend fun obtenirUsage(jours: Int = 7): ReponseUsage {
         val reponse: HttpResponse = http.get("$BASE_URL/api/appareils-mobiles/usage?jours=$jours") {
+            avecAuth(this)
+        }
+        return reponse.body()
+    }
+
+    suspend fun demarrerConnexionNotion(): UrlAutorisationNotion {
+        val reponse: HttpResponse = http.post("$BASE_URL/api/appareils-mobiles/connecteurs/notion/demarrer") {
+            avecAuth(this)
+        }
+        return reponse.body()
+    }
+
+    suspend fun finaliserConnexionNotion(code: String, state: String): ReponseFinalisationNotion {
+        val reponse: HttpResponse = http.post("$BASE_URL/api/appareils-mobiles/connecteurs/notion/finaliser") {
+            avecAuth(this)
+            contentType(ContentType.Application.Json)
+            setBody(FinalisationNotion(code, state))
+        }
+        return reponse.body()
+    }
+
+    suspend fun statutNotion(): StatutNotion {
+        val reponse: HttpResponse = http.get("$BASE_URL/api/appareils-mobiles/connecteurs/notion/statut") {
+            avecAuth(this)
+        }
+        return reponse.body()
+    }
+
+    suspend fun rechercherNotion(requete: String): ReponseRechercheNotion {
+        val reponse: HttpResponse = http.get("$BASE_URL/api/appareils-mobiles/connecteurs/notion/rechercher?q=$requete") {
             avecAuth(this)
         }
         return reponse.body()

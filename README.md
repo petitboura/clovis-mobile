@@ -44,6 +44,32 @@ exécute ce que le backend décide, elle ne réinvente aucune logique IA.
   sur les deux plateformes — équivalence Android/iOS non encore vérifiée
   sur appareil réel, voir avertissement ci-dessous.
 
+## État au 23/08/2026 (Lot 5 — connecteurs tiers, Notion)
+
+- Architecture retenue : l'app mobile appelle `clovis-backend`, qui pilote
+  l'OAuth et les tokens (réutilise `connexions/notion.py`, déjà utilisé par
+  le chat) — pas de stockage de token côté téléphone.
+- **Correction importante en amont** : le connecteur Notion existant portait
+  un `client_name="Djiguigne"` et un `redirect_uri` sur un domaine
+  `djiguigne.vercel.app` — fuite de marque, contraire à la contrainte stricte
+  du chantier. Corrigé côté `clovis-backend` (nouvel enregistrement DCR sous
+  "Clovis", `URL_RETOUR_APP` migré vers `classgpt-frontend.vercel.app`).
+  L'ancienne connexion Notion de Bourama a été supprimée (à refaire).
+- Flow OAuth mobile : `clovismobile://oauth-callback` enregistré comme
+  redirect_uri supplémentaire auprès de Notion (DCR accepte plusieurs URIs),
+  dédié au mobile — aucun changement nécessaire côté frontend web.
+  - Android : Custom Tabs + `OAuthCallbackActivity.kt` (intent-filter sur le
+    schéma) + `RetourOAuth` (SharedFlow) pour relayer code/state à
+    `ConnecteursScreen.kt`.
+  - iOS : `ASWebAuthenticationSession` (callbackURLScheme, pas besoin
+    d'entrée Info.plist pour ce mécanisme précis) dans `ConnecteursScreen.swift`.
+- Backend : nouveaux endpoints sous `/api/appareils-mobiles/connecteurs/notion/`
+  (`demarrer`, `finaliser`, `statut`, `rechercher`) dans `appareils_mobiles.py`.
+  `rechercher` appelle directement l'API REST Notion (`/v1/search`), pas le
+  MCP Notion (pensé pour l'agent de chat, pas pour un appel mobile simple).
+- Critère de fin (connecteur fonctionnel de bout en bout) : code en place
+  sur les trois dépôts, jamais testé sur appareil réel — voir avertissement.
+
 ## ⚠️ Important : rien de tout ça n'a été compilé ni testé
 
 Cet environnement (sandbox Claude) n'a ni Android Studio/Gradle/SDK Android,
@@ -71,6 +97,6 @@ chantier (`00-commun.md`), pas juste une formalité.
 
 ## Prochains lots
 
-Notifications & rappels, contrôles de session, connecteurs tiers (lots 3 à
-5, communs). Accessibilité (lots 6 à 8, flavor `externe` uniquement, jamais
-iOS) — pas commencés.
+Notifications & rappels, contrôles de session (lots 3-4, communs).
+Accessibilité (lots 6 à 8, flavor `externe` uniquement, jamais iOS) — pas
+commencés.

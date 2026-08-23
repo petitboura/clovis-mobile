@@ -28,6 +28,36 @@ struct ReponseUsage: Codable {
     let usage: [LigneUsage]
 }
 
+// MARK: - Lot 5 : connecteurs tiers (Notion)
+
+struct UrlAutorisationNotion: Codable {
+    let url_autorisation: String
+}
+
+struct FinalisationNotion: Codable {
+    let code: String
+    let state: String
+}
+
+struct ReponseFinalisationNotion: Codable {
+    let connecte: Bool
+    let espace: String?
+}
+
+struct StatutNotion: Codable {
+    let connecte: Bool
+}
+
+struct ResultatNotion: Codable, Identifiable {
+    let id: String
+    let type: String
+    let url: String?
+}
+
+struct ReponseRechercheNotion: Codable {
+    let resultats: [ResultatNotion]
+}
+
 enum ClovisApiClient {
     static let baseURL = "https://clovis-backend-production.up.railway.app"
 
@@ -56,5 +86,35 @@ enum ClovisApiClient {
         let requete = try await requeteAuthentifiee(url, methode: "GET")
         let (data, _) = try await URLSession.shared.data(for: requete)
         return try JSONDecoder().decode(ReponseUsage.self, from: data)
+    }
+
+    static func demarrerConnexionNotion() async throws -> UrlAutorisationNotion {
+        let url = URL(string: "\(baseURL)/api/appareils-mobiles/connecteurs/notion/demarrer")!
+        let requete = try await requeteAuthentifiee(url, methode: "POST")
+        let (data, _) = try await URLSession.shared.data(for: requete)
+        return try JSONDecoder().decode(UrlAutorisationNotion.self, from: data)
+    }
+
+    static func finaliserConnexionNotion(code: String, state: String) async throws -> ReponseFinalisationNotion {
+        let url = URL(string: "\(baseURL)/api/appareils-mobiles/connecteurs/notion/finaliser")!
+        var requete = try await requeteAuthentifiee(url, methode: "POST")
+        requete.httpBody = try JSONEncoder().encode(FinalisationNotion(code: code, state: state))
+        let (data, _) = try await URLSession.shared.data(for: requete)
+        return try JSONDecoder().decode(ReponseFinalisationNotion.self, from: data)
+    }
+
+    static func statutNotion() async throws -> StatutNotion {
+        let url = URL(string: "\(baseURL)/api/appareils-mobiles/connecteurs/notion/statut")!
+        let requete = try await requeteAuthentifiee(url, methode: "GET")
+        let (data, _) = try await URLSession.shared.data(for: requete)
+        return try JSONDecoder().decode(StatutNotion.self, from: data)
+    }
+
+    static func rechercherNotion(_ requeteTexte: String) async throws -> ReponseRechercheNotion {
+        var composants = URLComponents(string: "\(baseURL)/api/appareils-mobiles/connecteurs/notion/rechercher")!
+        composants.queryItems = [URLQueryItem(name: "q", value: requeteTexte)]
+        let requete = try await requeteAuthentifiee(composants.url!, methode: "GET")
+        let (data, _) = try await URLSession.shared.data(for: requete)
+        return try JSONDecoder().decode(ReponseRechercheNotion.self, from: data)
     }
 }

@@ -84,4 +84,7 @@ dependencies {
     // Icones Folder/CreateNewFolder/NoteAdd/InsertDriveFile absentes du set
     // "core" de Compose -- necessaires pour DossiersScreen.kt (Lot 2).
     implementation("androidx.compose.material:material-icons-extended")
+    // Lot 5 : Custom Tabs pour l'OAuth des connecteurs tiers (Notion...),
+    // equivalent Android de ASWebAuthenticationSession cote iOS.
+    implementation("androidx.browser:browser:1.8.0")
 }

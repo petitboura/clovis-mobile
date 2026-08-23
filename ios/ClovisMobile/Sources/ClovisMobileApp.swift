@@ -16,6 +16,8 @@ struct ClovisMobileApp: App {
                             .tabItem { Label("Usage", systemImage: "chart.bar") }
                         DossiersScreen()
                             .tabItem { Label("Dossiers", systemImage: "folder") }
+                        ConnecteursScreen()
+                            .tabItem { Label("Connecteurs", systemImage: "link") }
                     }
                 } else {
                     LoginScreen(onConnecte: { connecte = true })
