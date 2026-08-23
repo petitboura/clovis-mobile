@@ -164,5 +164,35 @@ Flavor `externe` uniquement, construit sur le Lot 6 (`07-actions-pilotees.md`).
 - Pas testé sur appareil réel (même limite que tous les lots précédents,
   voir avertissement plus haut).
 
-Lot 8 (distribution hors store) reste le seul lot non commencé pour le
-flavor `externe`.
+## Lot 8 — Distribution hors store (23/08/2026)
+
+Flavor `externe` uniquement, en parallèle du Lot 6 comme prévu par le
+document (dépendance : "au moins le Lot 6 terminé", ✓).
+
+- **Signature** : configurée pour lire une clé locale jamais committée
+  (`android/keystore.properties`, gitignored) — voir
+  `android/README-SIGNATURE.md` pour la générer. Sans ce fichier, le build
+  `externe` compile quand même mais n'est pas signé (utile pour développer
+  sans avoir encore la clé).
+- **Vérification de mise à jour** : l'app interroge l'API publique GitHub
+  Releases (`petitboura/clovis-mobile`), compare les versions numériquement,
+  et affiche une bannière avec un bouton "Télécharger" si une version plus
+  récente existe. Décision prise avec Bourama : hébergement sur GitHub
+  Releases (déjà en place, pas de nouvelle infrastructure).
+- **Page d'installation** pour l'étudiant qui sideload : `docs/installation.md`.
+- Nettoyage au passage : dépendance `material-icons-extended` qui était
+  déclarée deux fois dans `build.gradle.kts` (résidu de deux lots parallèles).
+
+Pas testé sur appareil réel (même limite d'outillage que les lots
+précédents). Pour publier une vraie release : suivre
+`android/README-SIGNATURE.md` (générer la clé une fois, puis à chaque
+version : incrémenter versionCode/versionName, générer l'APK signé, créer
+la Release GitHub avec l'APK en pièce jointe).
+
+## Tous les lots de la Partie 3 ont maintenant du code en place (23/08/2026)
+
+Lots 1, 2, 4, 5, 6, 7, 8 : faits. Lot 3 (notifications & rappels) reste le
+seul non fait — vérifié non bloquant pour les lots 6/7/8, mais reste à
+faire pour que le programme soit complet. **Rien de tout ça n'a été
+compilé ni testé sur un appareil réel**, voir l'avertissement plus haut :
+c'est la prochaine étape avant de considérer la Partie 3 terminée.

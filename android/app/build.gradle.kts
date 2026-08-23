@@ -5,10 +5,23 @@
 // les lots 6-8 ne sont pas encore construits, pour garantir l'etancheite
 // structurellement (voir 00-commun.md, "isolation au niveau du build, pas
 // d'un simple interrupteur en code").
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+}
+
+// Lot 8 : signature du flavor "externe", lue depuis un fichier LOCAL jamais
+// committe (voir README-SIGNATURE.md). Absent -> pas de signingConfig
+// applique, le build "play" (signe par Google Play App Signing) n'en a de
+// toute facon pas besoin.
+val fichierKeystore = rootProject.file("keystore.properties")
+val proprietesKeystore = Properties().apply {
+    if (fichierKeystore.exists()) {
+        fichierKeystore.inputStream().use { load(it) }
+    }
 }
 
 android {
@@ -23,11 +36,24 @@ android {
         versionName = "0.1.0"
     }
 
+    signingConfigs {
+        if (fichierKeystore.exists()) {
+            create("externe") {
+                storeFile = file(proprietesKeystore.getProperty("storeFile"))
+                storePassword = proprietesKeystore.getProperty("storePassword")
+                keyAlias = proprietesKeystore.getProperty("keyAlias")
+                keyPassword = proprietesKeystore.getProperty("keyPassword")
+            }
+        }
+    }
+
     flavorDimensions += "distribution"
     productFlavors {
         create("play") {
             dimension = "distribution"
             // Aucun applicationIdSuffix : c'est l'id publie sur le Play Store.
+            // Signature geree automatiquement par Google Play App Signing,
+            // rien a configurer ici.
         }
         create("externe") {
             dimension = "distribution"
@@ -36,6 +62,12 @@ android {
             // marquer qu'il s'agit d'une distribution differente (lots 6-8).
             applicationIdSuffix = ".externe"
             versionNameSuffix = "-externe"
+            // Lot 8 : signature manuelle, TOUJOURS la meme cle d'une version
+            // a l'autre (voir README-SIGNATURE.md), sinon aucune mise a jour
+            // ne pourra s'installer par-dessus l'app existante.
+            if (fichierKeystore.exists()) {
+                signingConfig = signingConfigs.getByName("externe")
+            }
         }
     }
 
@@ -67,8 +99,10 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.material3:material3")
-    // Icones Timer/BarChart (navigation Lot 4) : absentes du set de base,
-    // necessitent le module extended.
+    // Icones (Timer, BarChart, Folder, CreateNewFolder, NoteAdd,
+    // InsertDriveFile, RemoveRedEye...) absentes du set de base Compose,
+    // necessaires pour plusieurs ecrans (lots 2, 4, 6) -- une seule
+    // declaration suffit, retire le doublon introduit par une session parallele.
     implementation("androidx.compose.material:material-icons-extended")
 
     // Client HTTP pour appeler clovis-backend (POST/GET /api/appareils-mobiles/usage)
@@ -84,9 +118,6 @@ dependencies {
     // Lot 2 : DocumentFile, wrapper autour de Storage Access Framework (SAF)
     // pour naviguer/creer/renommer/supprimer/deplacer dans un dossier designe.
     implementation("androidx.documentfile:documentfile:1.0.1")
-    // Icones Folder/CreateNewFolder/NoteAdd/InsertDriveFile absentes du set
-    // "core" de Compose -- necessaires pour DossiersScreen.kt (Lot 2).
-    implementation("androidx.compose.material:material-icons-extended")
     // Lot 5 : Custom Tabs pour l'OAuth des connecteurs tiers (Notion...),
     // equivalent Android de ASWebAuthenticationSession cote iOS.
     implementation("androidx.browser:browser:1.8.0")

@@ -1,0 +1,20 @@
+# Cree le 23/08/2026, Lot 8 : ne JAMAIS committer une clé de signature ou
+# des identifiants dans ce dépôt (public). Voir android/README-SIGNATURE.md.
+
+# Android
+android/keystore.properties
+*.jks
+*.keystore
+android/.gradle/
+android/**/build/
+android/local.properties
+*.iml
+.idea/
+
+# iOS
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
+ios/**/DerivedData/
+
+# Générique
+.DS_Store

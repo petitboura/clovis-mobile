@@ -10,6 +10,7 @@ package com.clovis.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.clovis.app.accessibilite.ModuleAccessibilite
 import com.clovis.app.data.SupabaseAuthClient
+import com.clovis.app.miseajour.ModuleMiseAJour
 import com.clovis.app.ui.screens.ConnecteursScreen
 import com.clovis.app.ui.screens.ControleSessionScreen
 import com.clovis.app.ui.screens.DossiersScreen
@@ -95,13 +97,20 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         ) { paddingInterne ->
-                            Surface(modifier = Modifier.fillMaxSize().padding(paddingInterne)) {
-                                when (ongletActif) {
-                                    Onglet.SESSION -> ControleSessionScreen()
-                                    Onglet.USAGE -> UsageScreen()
-                                    Onglet.DOSSIERS -> DossiersScreen()
-                                    Onglet.CONNECTEURS -> ConnecteursScreen()
-                                    Onglet.ACCESSIBILITE -> ModuleAccessibilite.Ecran()
+                            Column(modifier = Modifier.fillMaxSize().padding(paddingInterne)) {
+                                // Lot 8 : n'affiche rien reellement en flavor play
+                                // (ModuleMiseAJour.disponible == false, voir stub).
+                                if (ModuleMiseAJour.disponible) {
+                                    ModuleMiseAJour.Banniere()
+                                }
+                                Surface(modifier = Modifier.fillMaxSize()) {
+                                    when (ongletActif) {
+                                        Onglet.SESSION -> ControleSessionScreen()
+                                        Onglet.USAGE -> UsageScreen()
+                                        Onglet.DOSSIERS -> DossiersScreen()
+                                        Onglet.CONNECTEURS -> ConnecteursScreen()
+                                        Onglet.ACCESSIBILITE -> ModuleAccessibilite.Ecran()
+                                    }
                                 }
                             }
                         }
