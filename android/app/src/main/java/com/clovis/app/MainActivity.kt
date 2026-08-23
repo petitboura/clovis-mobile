@@ -16,10 +16,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.QueryStats
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import com.clovis.app.accessibilite.ModuleAccessibilite
 import com.clovis.app.data.SupabaseAuthClient
 import com.clovis.app.ui.screens.ConnecteursScreen
 import com.clovis.app.ui.screens.ControleSessionScreen
@@ -31,11 +33,16 @@ import com.clovis.app.ui.screens.UsageScreen
 // Scaffold+bottomBar du Lot 2 (deja pense pour accueillir les lots suivants),
 // Session ajoute en premier onglet -- c'est l'ecran de demarrage naturel de
 // l'app au quotidien.
+// Lot 6 : onglet ACCESSIBILITE ajoute a l'enum commune, mais affiche
+// UNIQUEMENT si ModuleAccessibilite.disponible (vrai pour externe, faux pour
+// play) -- voir plus bas. L'enum existe dans les deux flavors, seul l'ajout
+// effectif a la bottomBar est conditionnel.
 private enum class Onglet(val etiquette: String) {
     SESSION("Session"),
     USAGE("Usage"),
     DOSSIERS("Dossiers"),
-    CONNECTEURS("Connecteurs")
+    CONNECTEURS("Connecteurs"),
+    ACCESSIBILITE("Écran")
 }
 
 class MainActivity : ComponentActivity() {
@@ -74,6 +81,17 @@ class MainActivity : ComponentActivity() {
                                         icon = { Icon(Icons.Default.Link, contentDescription = null) },
                                         label = { Text(Onglet.CONNECTEURS.etiquette) }
                                     )
+                                    // Lot 6 : n'existe reellement que dans le flavor externe
+                                    // (ModuleAccessibilite.disponible == false et Ecran() vide
+                                    // pour play, voir accessibilite/ModuleAccessibilite.kt).
+                                    if (ModuleAccessibilite.disponible) {
+                                        NavigationBarItem(
+                                            selected = ongletActif == Onglet.ACCESSIBILITE,
+                                            onClick = { ongletActif = Onglet.ACCESSIBILITE },
+                                            icon = { Icon(Icons.Default.RemoveRedEye, contentDescription = null) },
+                                            label = { Text(Onglet.ACCESSIBILITE.etiquette) }
+                                        )
+                                    }
                                 }
                             }
                         ) { paddingInterne ->
@@ -83,6 +101,7 @@ class MainActivity : ComponentActivity() {
                                     Onglet.USAGE -> UsageScreen()
                                     Onglet.DOSSIERS -> DossiersScreen()
                                     Onglet.CONNECTEURS -> ConnecteursScreen()
+                                    Onglet.ACCESSIBILITE -> ModuleAccessibilite.Ecran()
                                 }
                             }
                         }

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Cree le 23/08/2026, Bourama : flavor "externe" (distribution hors Play Store,
-    accessibilite ajoutee aux lots 6-8).
-    Volontairement vide pour l'instant : ne JAMAIS declarer ici une permission
-    ou un service non encore implemente (voir 00-commun.md, une permission
-    declaree mais inutilisee expose deja a un rejet). Le service
-    d'accessibilite (BIND_ACCESSIBILITY_SERVICE) sera ajoute ici au Lot 6,
-    jamais dans src/main ni dans src/play.
+    Cree le 23/08/2026, Bourama : flavor "externe" (distribution hors Play Store).
+    Lot 6 : declaration du service d'accessibilite (lecture seule, voir
+    ServiceAccessibiliteClovis.kt et 06-service-accessibilite.md). Toute
+    capacite d'ACTION (Lot 7) s'ajoutera ici plus tard, jamais dans
+    src/main ni src/play.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <service
+            android:name=".accessibilite.ServiceAccessibiliteClovis"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="false"
+            android:label="Clovis, lecture d'écran">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+    </application>
+</manifest>

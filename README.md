@@ -118,3 +118,22 @@ Bourama : continuer, tout tester ensemble plus tard).
 Notifications & rappels (lot 3, commun).
 Accessibilité (lots 6 à 8, flavor `externe` uniquement, jamais iOS) — pas
 commencés.
+
+## Lot 6 — Service d'accessibilité (23/08/2026)
+
+Flavor `externe` uniquement, comme prévu (`06-service-accessibilite.md`).
+Lot 3 (notifications & rappels) n'a pas été fait — vérifié non nécessaire
+pour ce lot précis, aucune dépendance fonctionnelle réelle entre les deux.
+
+- `ServiceAccessibiliteClovis` : lecture seule (aucune action, portée
+  stricte du Lot 6), journalise ce qu'il observe.
+- Écran de consentement en langage simple, affiché avant l'écran système.
+- Isolation garantie au niveau des sources compilées : le flavor `play` ne
+  contient aucune ligne de code d'accessibilité (stub vide dans
+  `src/play/.../ModuleAccessibilite.kt`), pas juste un interrupteur runtime.
+- Pas testé sur appareil réel (pas d'outillage Android dans ce sandbox,
+  voir plus haut) — obligatoire avant de considérer ce lot terminé,
+  notamment vérifier la lecture sur au moins deux apps tierces différentes.
+
+Reste à faire avant le Lot 7 : Lot 3 (si besoin plus tard), puis Lot 7
+(actions pilotées) dépend explicitement du Lot 6.

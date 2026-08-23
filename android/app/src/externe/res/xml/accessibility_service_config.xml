@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cree le 23/08/2026, Bourama : Lot 6, flavor externe uniquement.
+    Volontairement AUCUNE capacite d'action (pas de canPerformGestures, pas
+    de canRequestTouchExplorationMode) : lecture seule, portee stricte du
+    Lot 6. A etendre explicitement au Lot 7, jamais avant.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagRetrieveInteractiveWindows|flagReportViewIds"
+    android:canRetrieveWindowContent="true"
+    android:notificationTimeout="200"
+    android:description="@string/description_service_accessibilite" />
