@@ -115,9 +115,9 @@ Bourama : continuer, tout tester ensemble plus tard).
 
 ## Prochains lots
 
-Notifications & rappels (lot 3, commun).
-Accessibilité (lots 6 à 8, flavor `externe` uniquement, jamais iOS) — pas
-commencés.
+Notifications & rappels (lot 3, commun) — pas fait, jugé non nécessaire pour
+débloquer les lots 6/7 (voir section Lot 6 ci-dessous).
+Distribution hors store (lot 8, flavor `externe` uniquement) — pas commencé.
 
 ## Lot 6 — Service d'accessibilité (23/08/2026)
 
@@ -137,3 +137,32 @@ pour ce lot précis, aucune dépendance fonctionnelle réelle entre les deux.
 
 Reste à faire avant le Lot 7 : Lot 3 (si besoin plus tard), puis Lot 7
 (actions pilotées) dépend explicitement du Lot 6.
+
+## Lot 7 — Actions pilotées & fiabilité multi-app (23/08/2026)
+
+Flavor `externe` uniquement, construit sur le Lot 6 (`07-actions-pilotees.md`).
+
+- `AppsAutorisees.kt` : liste persistée (SharedPreferences) des apps
+  explicitement autorisées par l'étudiant, une par une (switch par app dans
+  l'onglet Accessibilité) — aucune action n'est jamais tentée sur une app
+  non listée ici, vérifié à chaque appel.
+- `ExecuteurActions.kt` : recherche un élément dans l'arbre par texte/
+  description (profondeur plafonnée, un seul parcours), puis `ACTION_CLICK`
+  ou `ACTION_SET_TEXT` via `AccessibilityNodeInfo.performAction`. Pas de
+  geste tactile brut (`dispatchGesture`) — pas nécessaire pour ce lot, donc
+  aucun changement de capacité dans `accessibility_service_config.xml`.
+- Comportement de repli (règle "ne jamais deviner" appliquée à l'agent) :
+  un seul essai par appel, jamais de boucle de réessai. Élément introuvable,
+  app non autorisée, ou action refusée par le système → échec immédiat avec
+  message clair, journalisé dans `JournalActions.kt` (visible dans l'onglet
+  Accessibilité, section "Dernières tentatives d'action").
+- Panneau de test manuel ajouté à `EcranAccessibilite.kt` (champ "élément
+  ciblé" + "texte à saisir" + boutons Cliquer/Saisir) — nécessaire pour
+  vérifier le critère de fin sur appareil réel : au moins une action de bout
+  en bout fiable, et le repli vérifié en cassant volontairement le scénario
+  (app fermée, élément renommé/déplacé, app non autorisée).
+- Pas testé sur appareil réel (même limite que tous les lots précédents,
+  voir avertissement plus haut).
+
+Lot 8 (distribution hors store) reste le seul lot non commencé pour le
+flavor `externe`.

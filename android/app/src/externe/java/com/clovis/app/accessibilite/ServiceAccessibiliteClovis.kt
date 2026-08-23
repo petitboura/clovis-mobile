@@ -1,13 +1,9 @@
 // Cree le 23/08/2026, Bourama : Lot 6 (service d'accessibilite, flavor externe uniquement).
-//
-// PORTEE STRICTE DU LOT 6 : lecture seule. Aucun clic, aucun remplissage,
-// aucune navigation pilotee -- ca, c'est le Lot 7 (hors scope ici, voir
-// 06-service-accessibilite.md). Ce fichier ne doit jamais appeler de methode
-// d'action sur un AccessibilityNodeInfo (performAction, etc.) tant que le
-// Lot 7 n'est pas explicitement demarre.
-//
-// Config associee : res/xml/accessibility_service_config.xml (memes
-// contraintes en miroir : pas de capabilite d'action declaree encore).
+// Modifie 23/08/2026, Lot 7 : le service expose maintenant son instance active
+// (companion object) pour qu'ExecuteurActions.kt puisse lire rootInActiveWindow
+// et y executer des actions. Portee des actions elle-meme geree entierement
+// dans ExecuteurActions.kt, pas ici -- ce fichier reste la lecture/le cycle
+// de vie du service, rien de plus.
 package com.clovis.app.accessibilite
 
 import android.accessibilityservice.AccessibilityService
@@ -16,8 +12,14 @@ import android.view.accessibility.AccessibilityNodeInfo
 
 class ServiceAccessibiliteClovis : AccessibilityService() {
 
+    companion object {
+        var instance: ServiceAccessibiliteClovis? = null
+            private set
+    }
+
     override fun onServiceConnected() {
         super.onServiceConnected()
+        instance = this
         journaliser(nomPaquet = "-", typeEvenement = "SERVICE_CONNECTE", nombreNoeudsLus = 0)
     }
 
@@ -44,6 +46,11 @@ class ServiceAccessibiliteClovis : AccessibilityService() {
 
     override fun onInterrupt() {
         journaliser(nomPaquet = "-", typeEvenement = "SERVICE_INTERROMPU", nombreNoeudsLus = 0)
+    }
+
+    override fun onDestroy() {
+        if (instance === this) instance = null
+        super.onDestroy()
     }
 
     /** Parcours en lecture seule, profondeur plafonnee pour eviter un arbre pathologique. */
