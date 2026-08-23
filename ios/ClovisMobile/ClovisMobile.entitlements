@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+        Cree le 23/08/2026, Bourama : entitlement Family Controls, necessaire
+        pour demander l'autorisation .individual (temps par app). Se demande
+        via Apple (formulaire "Family Controls Distribution" du compte
+        Apple Developer Program), pas disponible par defaut meme avec un
+        compte payant actif -- voir ios/README.md.
+    -->
+    <key>com.apple.developer.family-controls</key>
+    <true/>
+</dict>
+</plist>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cree le 23/08/2026, Bourama : Lot 1 Partie 3 (app mobile), socle Android.
+    Permissions COMMUNES aux deux flavors (play et externe). Toute permission
+    specifique a l'accessibilite (lots 6-8) va dans src/externe/AndroidManifest.xml,
+    jamais ici -- voir 00-commun.md.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Permission speciale : ne s'accorde pas via une popup standard, l'app
+         doit rediriger l'etudiant vers Reglages > Acces aux donnees d'usage
+         (voir UsageScreen.kt, ACTION_USAGE_ACCESS_SETTINGS). -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
+    <application
+        android:label="Clovis"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar"
+        android:allowBackup="false">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>

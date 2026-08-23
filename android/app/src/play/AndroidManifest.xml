@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cree le 23/08/2026, Bourama : flavor "play" (publiable Play Store).
+    Volontairement vide pour l'instant : aucune permission ni service propre
+    a ce flavor au Lot 1. Fusionne automatiquement avec src/main lors du
+    build (Gradle merge les manifestes par nom de flavor). Ce fichier existe
+    des maintenant pour garantir l'etancheite structurelle avec "externe" des
+    le depart -- voir 00-commun.md.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" />
