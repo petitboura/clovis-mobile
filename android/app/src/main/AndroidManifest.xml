@@ -17,6 +17,15 @@
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
+    <!-- Lot 4, "Acces a la Politique de Notification" : meme famille de
+         permission speciale que PACKAGE_USAGE_STATS ci-dessus -- ne s'accorde
+         pas via une popup standard, redirection vers Reglages via
+         ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS (voir
+         ControleSessionRepository.kt). Necessaire pour basculer le Ne pas
+         deranger ET pour ajuster le volume sonnerie/notifications pendant
+         une session (Android bloque sinon ce dernier avec SecurityException). -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
     <application
         android:label="Clovis"
         android:icon="@mipmap/ic_launcher"

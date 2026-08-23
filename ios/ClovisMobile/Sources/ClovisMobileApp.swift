@@ -12,6 +12,8 @@ struct ClovisMobileApp: App {
             Group {
                 if connecte {
                     TabView {
+                        ControleSessionScreen()
+                            .tabItem { Label("Session", systemImage: "timer") }
                         UsageScreen()
                             .tabItem { Label("Usage", systemImage: "chart.bar") }
                         DossiersScreen()

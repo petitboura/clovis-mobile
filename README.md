@@ -80,23 +80,41 @@ corriger les éventuelles erreurs de build, et tester sur un appareil réel**
 avant de considérer ce lot terminé — c'est une exigence explicite du
 chantier (`00-commun.md`), pas juste une formalité.
 
+## État au 23/08/2026 (Lot 4 — contrôles de session)
+
+Construit par-dessus le Lot 1 non compilé/non testé (décision explicite de
+Bourama : continuer, tout tester ensemble plus tard).
+
+- **Android** : nouvel écran `ControleSessionScreen.kt` + repository
+  `ControleSessionRepository.kt`. Bascule DND (`INTERRUPTION_FILTER_ALARMS`,
+  à ajuster si Bourama veut un filtre différent) et coupe volume
+  sonnerie/notifications, via la permission spéciale "Accès à la Politique de
+  Notification" (`ACCESS_NOTIFICATION_POLICY`, ajoutée au manifeste commun).
+  État initial capturé avant modification et restauré exactement à l'arrêt.
+  Onglet "Session" ajouté à la barre de navigation existante (Session /
+  Usage / Dossiers), en premier onglet.
+- **iOS** : nouvel écran `ControleSessionScreen.swift`. Le minuteur
+  fonctionne pareil qu'Android. **DND/Focus et volume système : impossibles
+  pour une app tierce sur iOS**, vérifié et documenté plutôt que simulé (voir
+  commentaire en tête du fichier) — DND propose seulement d'ouvrir l'app
+  Raccourcis pour que l'étudiant configure lui-même un automation Focus ;
+  volume limité au volume média de l'app via `MPVolumeView`.
+- **Limite connue, non traitée ici** : si l'app Android est tuée par l'OS
+  pendant une session active, le DND/volume ne seront pas restaurés
+  automatiquement (pas de foreground service). À traiter dans une prochaine
+  session si Bourama le juge nécessaire — décision produit, pas prise seul.
+
 ## TODO avant de pouvoir tester
 
-1. Remplacer les valeurs placeholder dans le code :
-   - `SUPABASE_ANON_KEY` (Android : `SupabaseAuthClient.kt`, iOS :
-     `SupabaseAuthClient.swift`) — clé anon publique du projet Supabase
-     "Djiguigne AI", jamais la clé service_role.
-   - `BASE_URL` / `baseURL` (Android : `ClovisApiClient.kt`, iOS :
-     `ClovisApiClient.swift`) — URL Railway réelle de `clovis-backend`.
-2. Ouvrir `android/` directement dans Android Studio (projet Gradle standard,
+1. Ouvrir `android/` directement dans Android Studio (projet Gradle standard,
    pas d'étape supplémentaire).
-3. Pour iOS, créer le projet Xcode manuellement (Xcode ne peut pas être piloté
+2. Pour iOS, créer le projet Xcode manuellement (Xcode ne peut pas être piloté
    depuis ce sandbox) — voir `ios/README.md` pour les étapes exactes.
-4. Déployer `clovis-backend` (nouveau routeur) sur Railway avant de tester la
+3. Déployer `clovis-backend` (nouveau routeur) sur Railway avant de tester la
    synchronisation.
 
 ## Prochains lots
 
-Notifications & rappels, contrôles de session (lots 3-4, communs).
+Notifications & rappels (lot 3, commun).
 Accessibilité (lots 6 à 8, flavor `externe` uniquement, jamais iOS) — pas
 commencés.
