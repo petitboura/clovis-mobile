@@ -106,14 +106,27 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
 
     // Client HTTP pour appeler clovis-backend (POST/GET /api/appareils-mobiles/usage)
-    implementation("io.ktor:ktor-client-android:2.3.12")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
+    // ET moteur Ktor utilise par supabase-kt (une seule declaration necessaire,
+    // les deux s'appuient sur le meme client). Version alignee sur ce que
+    // supabase-kt 3.6.0 recommande (Ktor 3.4.x) -- l'ancienne version 2.3.12
+    // etait celle d'avant la correction du bug de version supabase-kt
+    // ci-dessous, et n'est pas compatible avec supabase-kt 3.x.
+    implementation("io.ktor:ktor-client-android:3.4.0")
+    implementation("io.ktor:ktor-client-content-negotiation:3.4.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.0")
 
     // Auth Supabase native (meme systeme que clovis-frontend, voir core/auth.py cote backend)
-    implementation(platform("io.github.jan-tennert.supabase:bom:2.6.1"))
+    //
+    // BUG CORRIGE 23/08/2026 (session compilation Bourama) : la version etait
+    // epinglee a 2.6.1, une version PRE-3.0.0 de supabase-kt ou le module
+    // s'appelait encore "gotrue-kt". Le code Kotlin (SupabaseAuthClient.kt)
+    // utilise deja les imports post-3.0.0 (io.github.jan.supabase.auth.Auth),
+    // qui correspondent au module "auth-kt" -- d'ou "Failed to resolve" a la
+    // synchronisation Gradle : la version demandait un module qui n'existait
+    // pas encore a la version 2.6.1. Passe a 3.6.0 (derniere version stable
+    // au 23/08/2026, verifiee sur github.com/supabase-community/supabase-kt/releases).
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.6.0"))
     implementation("io.github.jan-tennert.supabase:auth-kt")
-    implementation("io.ktor:ktor-client-android:2.3.12")
 
     // Lot 2 : DocumentFile, wrapper autour de Storage Access Framework (SAF)
     // pour naviguer/creer/renommer/supprimer/deplacer dans un dossier designe.
