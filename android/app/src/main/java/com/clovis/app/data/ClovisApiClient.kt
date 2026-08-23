@@ -23,7 +23,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
 
-private const val BASE_URL = "A_REMPLACER_PAR_URL_RAILWAY_CLOVIS_BACKEND"
+private const val BASE_URL = "https://clovis-backend-production.up.railway.app"
 
 @Serializable
 data class EntreeUsage(

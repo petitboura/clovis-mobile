@@ -13,7 +13,7 @@ import Supabase
 
 enum SupabaseAuthClient {
     static let url = URL(string: "https://rwcyeppxfonvqbvztxyg.supabase.co")!
-    static let anonKey = "A_REMPLACER_PAR_LA_CLE_ANON_PUBLIQUE"
+    static let anonKey = "sb_publishable_ERc_A1s0fbWdTVzOZsGvCw_9GDzApZV"
 
     static let client = SupabaseClient(supabaseURL: url, supabaseKey: anonKey)
 

@@ -21,7 +21,7 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 object SupabaseAuthClient {
 
     private const val SUPABASE_URL = "https://rwcyeppxfonvqbvztxyg.supabase.co"
-    private const val SUPABASE_ANON_KEY = "A_REMPLACER_PAR_LA_CLE_ANON_PUBLIQUE"
+    private const val SUPABASE_ANON_KEY = "sb_publishable_ERc_A1s0fbWdTVzOZsGvCw_9GDzApZV"
 
     val client = createSupabaseClient(
         supabaseUrl = SUPABASE_URL,

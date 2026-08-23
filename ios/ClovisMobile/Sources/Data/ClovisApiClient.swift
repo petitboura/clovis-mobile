@@ -29,7 +29,7 @@ struct ReponseUsage: Codable {
 }
 
 enum ClovisApiClient {
-    static let baseURL = "A_REMPLACER_PAR_URL_RAILWAY_CLOVIS_BACKEND"
+    static let baseURL = "https://clovis-backend-production.up.railway.app"
 
     private static func requeteAuthentifiee(_ url: URL, methode: String) async throws -> URLRequest {
         guard let token = await SupabaseAuthClient.accessTokenCourant() else {
