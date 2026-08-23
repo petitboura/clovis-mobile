@@ -54,6 +54,29 @@ corriger les éventuelles erreurs de build, et tester sur un appareil réel**
 avant de considérer ce lot terminé — c'est une exigence explicite du
 chantier (`00-commun.md`), pas juste une formalité.
 
+## État au 23/08/2026 (Lot 4 — contrôles de session)
+
+Construit par-dessus le Lot 1 non compilé/non testé (décision explicite de
+Bourama : continuer, tout tester ensemble plus tard).
+
+- **Android** : nouvel écran `ControleSessionScreen.kt` + repository
+  `ControleSessionRepository.kt`. Bascule DND (`INTERRUPTION_FILTER_ALARMS`,
+  à ajuster si Bourama veut un filtre différent) et coupe volume
+  sonnerie/notifications, via la permission spéciale "Accès à la Politique de
+  Notification" (`ACCESS_NOTIFICATION_POLICY`, ajoutée au manifeste commun).
+  État initial capturé avant modification et restauré exactement à l'arrêt.
+  Navigation à deux onglets ajoutée dans `MainActivity.kt` (Session / Usage).
+- **iOS** : nouvel écran `ControleSessionScreen.swift`. Le minuteur
+  fonctionne pareil qu'Android. **DND/Focus et volume système : impossibles
+  pour une app tierce sur iOS**, vérifié et documenté plutôt que simulé (voir
+  commentaire en tête du fichier) — DND propose seulement d'ouvrir l'app
+  Raccourcis pour que l'étudiant configure lui-même un automation Focus ;
+  volume limité au volume média de l'app via `MPVolumeView`.
+- **Limite connue, non traitée ici** : si l'app Android est tuée par l'OS
+  pendant une session active, le DND/volume ne seront pas restaurés
+  automatiquement (pas de foreground service). À traiter dans une prochaine
+  session si Bourama le juge nécessaire — décision produit, pas prise seul.
+
 ## TODO avant de pouvoir tester
 
 1. Remplacer les valeurs placeholder dans le code :

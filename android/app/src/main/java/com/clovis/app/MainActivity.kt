@@ -15,15 +15,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.QueryStats
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.clovis.app.data.SupabaseAuthClient
+import com.clovis.app.ui.screens.ControleSessionScreen
 import com.clovis.app.ui.screens.DossiersScreen
 import com.clovis.app.ui.screens.LoginScreen
 import com.clovis.app.ui.screens.UsageScreen
 
+// Fusion Lot 2 (Usage/Dossiers) + Lot 4 (Session) : on garde le pattern
+// Scaffold+bottomBar du Lot 2 (deja pense pour accueillir les lots suivants),
+// Session ajoute en premier onglet -- c'est l'ecran de demarrage naturel de
+// l'app au quotidien.
 private enum class Onglet(val etiquette: String) {
+    SESSION("Session"),
     USAGE("Usage"),
     DOSSIERS("Dossiers")
 }
@@ -36,10 +43,16 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     var connecte by remember { mutableStateOf(SupabaseAuthClient.estConnecte()) }
                     if (connecte) {
-                        var ongletActif by remember { mutableStateOf(Onglet.USAGE) }
+                        var ongletActif by remember { mutableStateOf(Onglet.SESSION) }
                         Scaffold(
                             bottomBar = {
                                 NavigationBar {
+                                    NavigationBarItem(
+                                        selected = ongletActif == Onglet.SESSION,
+                                        onClick = { ongletActif = Onglet.SESSION },
+                                        icon = { Icon(Icons.Default.Timer, contentDescription = null) },
+                                        label = { Text(Onglet.SESSION.etiquette) }
+                                    )
                                     NavigationBarItem(
                                         selected = ongletActif == Onglet.USAGE,
                                         onClick = { ongletActif = Onglet.USAGE },
@@ -57,6 +70,7 @@ class MainActivity : ComponentActivity() {
                         ) { paddingInterne ->
                             Surface(modifier = Modifier.fillMaxSize().padding(paddingInterne)) {
                                 when (ongletActif) {
+                                    Onglet.SESSION -> ControleSessionScreen()
                                     Onglet.USAGE -> UsageScreen()
                                     Onglet.DOSSIERS -> DossiersScreen()
                                 }
