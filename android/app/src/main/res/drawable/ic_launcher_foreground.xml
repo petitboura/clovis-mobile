@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Lot 2B, 24/08/2026 : remplace la marque abstraite provisoire
-    (anneau + point) par la vraie identite visuelle Clovis -- la meme
+    (anneau + point) par la vraie identite visuelle Clovis. La meme
     plume "a main levee" que public/clovis-logo.svg dans clovis-frontend
     (viewBox 64x64), degradé et geometrie identiques, transposee ici a
     l'echelle et au centrage du viewport adaptatif 108x108 (facteur
     d'echelle 1.1, translation +17.5/+16.7 pour centrer dans la zone de
-    securite circulaire de 66dp -- coordonnees recalculees point par
+    securite circulaire de 66dp. Coordonnees recalculees point par
     point, pas de transform de groupe pour eviter toute ambiguite sur
     l'ordre d'application translate/scale des vector drawables).
 -->
