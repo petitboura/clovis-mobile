@@ -34,6 +34,24 @@ class ClovisFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+
+        // Ajoute le 24/08/2026, Lot 1A (brancher le cerveau) : un push
+        // type="action" est silencieux (voir _envoyer_fcm_action cote
+        // backend), on va chercher et executer l'action au lieu
+        // d'afficher une notification -- a distinguer AVANT de retomber
+        // sur le comportement rappel existant ci-dessous, inchange.
+        if (message.data["type"] == "action") {
+            val actionId = message.data["action_id"]
+            if (actionId == null) {
+                Log.w("ClovisFCM", "Push type=action recu sans action_id, ignore.")
+                return
+            }
+            CoroutineScope(Dispatchers.IO).launch {
+                com.clovis.app.data.ActionsAppareilExecuteur.executerAction(applicationContext, actionId)
+            }
+            return
+        }
+
         val titre = message.data["title"] ?: "Clovis"
         val corps = message.data["body"] ?: ""
         val prioritaire = message.data["prioritaire"] == "true"

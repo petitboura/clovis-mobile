@@ -71,6 +71,7 @@ class MainActivity : ComponentActivity() {
                     if (connecte) {
                         LaunchedEffect(Unit) {
                             scope.launch { enregistrerTokenPushSiPossible() }
+                            scope.launch { rattraperActionsEnAttente() }
                         }
                         Scaffold(
                             bottomBar = {
@@ -159,6 +160,24 @@ class MainActivity : ComponentActivity() {
         try {
             val token = FirebaseMessaging.getInstance().token.await()
             ClovisApiClient.enregistrerPushToken(TokenPush(plateforme = "android", token = token))
+        } catch (e: Exception) {
+            // Pas grave : re-tente a la prochaine connexion.
+        }
+    }
+
+    /**
+     * Ajoute le 24/08/2026, Lot 1A (brancher le cerveau) : filet de secours
+     * pour les actions decidees par Clovis pendant que l'app etait fermee
+     * et dont le push n'est jamais arrive (app tuee, token pas encore
+     * enregistre...). Meme esprit que enregistrerTokenPushSiPossible :
+     * rappele a chaque connexion, best-effort, pas de retry ici.
+     */
+    private suspend fun rattraperActionsEnAttente() {
+        try {
+            val actions = ClovisApiClient.obtenirActionsEnAttente().actions
+            for (action in actions) {
+                com.clovis.app.data.ActionsAppareilExecuteur.executerAction(applicationContext, action.id)
+            }
         } catch (e: Exception) {
             // Pas grave : re-tente a la prochaine connexion.
         }

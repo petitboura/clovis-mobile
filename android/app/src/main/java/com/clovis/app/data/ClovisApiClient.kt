@@ -19,6 +19,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
 private const val BASE_URL = "https://clovis-backend-production.up.railway.app"
 
@@ -70,6 +71,27 @@ data class ReponseRechercheNotion(val resultats: List<ResultatNotion>)
 
 @Serializable
 data class TokenPush(val plateforme: String, val token: String)
+
+// --- Lot 1A : canal de decision generique (brancher le cerveau) ---
+// Voir clovis-backend/core/actions_appareil_mobile.py : aucun type_action
+// "officiel" n'existe encore cote agent, ce canal est le pont generique
+// lecture/rapport, pas encore branche a une capacite reelle du telephone.
+
+// `parametres` en JsonElement brut (pas de forme fixe supposee) : le
+// contenu depend du type_action, qui n'a pas encore ete decide -- voir
+// note en tete de core/actions_appareil_mobile.py cote backend.
+@Serializable
+data class ActionAppareil(
+    val id: String,
+    val type_action: String,
+    val parametres: JsonObject = JsonObject(emptyMap())
+)
+
+@Serializable
+data class ReponseActionsEnAttente(val actions: List<ActionAppareil>)
+
+@Serializable
+data class ResultatAction(val succes: Boolean, val resultat: String = "")
 
 object ClovisApiClient {
 
@@ -143,6 +165,30 @@ object ClovisApiClient {
     suspend fun desinscrirePushToken(token: String): HttpResponse {
         return http.delete("$BASE_URL/api/appareils-mobiles/push-token?token=$token") {
             avecAuth(this)
+        }
+    }
+
+    // --- Lot 1A : canal de decision generique ---
+
+    suspend fun obtenirActionsEnAttente(): ReponseActionsEnAttente {
+        val reponse: HttpResponse = http.get("$BASE_URL/api/appareils-mobiles/actions/en-attente") {
+            avecAuth(this)
+        }
+        return reponse.body()
+    }
+
+    suspend fun obtenirAction(actionId: String): ActionAppareil {
+        val reponse: HttpResponse = http.get("$BASE_URL/api/appareils-mobiles/actions/$actionId") {
+            avecAuth(this)
+        }
+        return reponse.body()
+    }
+
+    suspend fun rapporterResultatAction(actionId: String, resultat: ResultatAction): HttpResponse {
+        return http.post("$BASE_URL/api/appareils-mobiles/actions/$actionId/resultat") {
+            avecAuth(this)
+            contentType(ContentType.Application.Json)
+            setBody(resultat)
         }
     }
 }
