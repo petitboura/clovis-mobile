@@ -142,6 +142,17 @@ dependencies {
     // manuellement via FirebaseOptions (voir ClovisFirebaseApp.kt), donc
     // seule la dependance firebase-messaging suffit, pas besoin du BOM
     // Firebase complet ni du plugin google-services.
-    implementation("com.google.firebase:firebase-messaging-ktx:24.1.0")
+    //
+    // BUG CORRIGE 24/08/2026 : le module -ktx est abandonne par Google
+    // depuis juillet 2025 (plus aucune nouvelle version publiee, retire
+    // du BOM Firebase a partir de la v34.0.0). Le code (MainActivity.kt,
+    // ClovisFirebaseMessagingService.kt) utilise deja l'API classique
+    // (FirebaseMessaging.getInstance()), pas l'API specifique -ktx -- le
+    // module etait donc a la fois obsolete et inutile. Remplace par le
+    // module principal, version directe la plus recente confirmee sur
+    // https://firebase.google.com/support/release-notes/android (BOM
+    // 34.18.0 du 19/08/2026), sans passer par le BOM pour respecter le
+    // choix d'architecture ci-dessus (pas de BOM Firebase complet).
+    implementation("com.google.firebase:firebase-messaging:25.1.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 }

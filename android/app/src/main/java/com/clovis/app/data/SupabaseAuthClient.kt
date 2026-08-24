@@ -6,11 +6,10 @@
 // le fait deja clovis-frontend cote web), recupere un access_token, et l'envoie
 // ensuite en Bearer a clovis-backend -- voir ClovisApiClient.kt.
 //
-// TODO Bourama : remplacer les deux valeurs ci-dessous par les vraies
-// SUPABASE_URL / SUPABASE_ANON_KEY du projet "Djiguigne AI"
-// (rwcyeppxfonvqbvztxyg), disponibles dans Supabase > Project Settings > API.
-// Jamais la cle service_role ici (cote client), uniquement la cle anon
-// publique -- meme regle que clovis-frontend.
+// Vraies valeurs SUPABASE_URL / SUPABASE_ANON_KEY du projet "Djiguigne AI"
+// (rwcyeppxfonvqbvztxyg) deja en place depuis le Lot 1 (confirme par le
+// README du depot). Jamais la cle service_role ici (cote client),
+// uniquement la cle anon publique -- meme regle que clovis-frontend.
 package com.clovis.app.data
 
 import io.github.jan.supabase.createSupabaseClient
