@@ -1,20 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Marque abstraite PROVISOIRE (anneau + point blanc), le temps qu'une
-    vraie identite visuelle Clovis existe : TODO Bourama. Zone de securite
-    d'icone adaptative : le contenu utile doit rester dans le cercle central
-    de 66dp (Android rogne differemment selon le lanceur du telephone).
+    Lot 2B, 24/08/2026 : remplace la marque abstraite provisoire
+    (anneau + point) par la vraie identite visuelle Clovis -- la meme
+    plume "a main levee" que public/clovis-logo.svg dans clovis-frontend
+    (viewBox 64x64), degradé et geometrie identiques, transposee ici a
+    l'echelle et au centrage du viewport adaptatif 108x108 (facteur
+    d'echelle 1.1, translation +17.5/+16.7 pour centrer dans la zone de
+    securite circulaire de 66dp -- coordonnees recalculees point par
+    point, pas de transform de groupe pour eviter toute ambiguite sur
+    l'ordre d'application translate/scale des vector drawables).
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+
     <path
-        android:fillColor="#FFFFFF"
-        android:fillType="evenOdd"
-        android:pathData="M54,27 A27,27 0 1 1 53.9,27 Z M54,39 A15,15 0 1 0 54.1,39 Z" />
+        android:pathData="M67.55,24.95
+                 C76.35,30.45, 79.65,43.1, 73.05,54.65
+                 C67.55,64.55, 56.0,71.15, 43.35,75.55
+                 C44.67,67.3, 49.95,59.6, 54.35,50.25
+                 C59.3,39.8, 63.7,32.1, 67.55,24.95 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="43.35" android:startY="24.95"
+                android:endX="79.65" android:endY="75.55"
+                android:startColor="#F0C766"
+                android:centerColor="#D9A438"
+                android:centerX="0.55"
+                android:endColor="#8A6A1F" />
+        </aapt:attr>
+    </path>
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M54,48 m-7,0 a7,7 0 1 0 14,0 a7,7 0 1 0 -14,0" />
+        android:pathData="M67.55,24.95
+                 C76.35,30.45, 79.65,43.1, 73.05,54.65
+                 C67.55,64.55, 56.0,71.15, 43.35,75.55
+                 C44.67,67.3, 49.95,59.6, 54.35,50.25
+                 C59.3,39.8, 63.7,32.1, 67.55,24.95 Z"
+        android:fillColor="#00000000"
+        android:strokeColor="#1a0f06"
+        android:strokeAlpha="0.18"
+        android:strokeWidth="1.1" />
+
+    <path
+        android:pathData="M66.45,27.15 C60.4,37.6, 52.15,53.0, 45.0,65.65 C41.48,70.05, 36.75,75.0, 32.35,78.85"
+        android:fillColor="#00000000"
+        android:strokeColor="#D9A438"
+        android:strokeWidth="2.86"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M31.03,80.17 m-2.64,0 a2.64,2.64 0 1 0 5.28,0 a2.64,2.64 0 1 0 -5.28,0"
+        android:fillColor="#D9A438" />
+
+    <path android:pathData="M62.6,33.2 L71.95,30.45" android:strokeColor="#D9A438" android:strokeWidth="1.76" android:strokeAlpha="0.85" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M58.97,40.35 L70.3,36.5" android:strokeColor="#D9A438" android:strokeWidth="1.76" android:strokeAlpha="0.85" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M55.12,48.27 L68.43,43.43" android:strokeColor="#D9A438" android:strokeWidth="1.76" android:strokeAlpha="0.8" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M51.16,56.08 L65.46,50.25" android:strokeColor="#D9A438" android:strokeWidth="1.65" android:strokeAlpha="0.75" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M46.65,63.23 L60.73,56.96" android:strokeColor="#D9A438" android:strokeWidth="1.54" android:strokeAlpha="0.7" android:strokeLineCap="round" android:fillColor="#00000000" />
+    <path android:pathData="M41.7,70.16 L54.24,64.0" android:strokeColor="#D9A438" android:strokeWidth="1.43" android:strokeAlpha="0.65" android:strokeLineCap="round" android:fillColor="#00000000" />
 </vector>

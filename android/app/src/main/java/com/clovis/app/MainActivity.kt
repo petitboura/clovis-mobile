@@ -37,6 +37,7 @@ import com.clovis.app.ui.screens.DossiersScreen
 import com.clovis.app.ui.screens.LoginScreen
 import com.clovis.app.ui.screens.RappelsScreen
 import com.clovis.app.ui.screens.UsageScreen
+import com.clovis.app.ui.theme.ClovisTheme
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -62,7 +63,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            ClovisTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     var connecte by remember { mutableStateOf(SupabaseAuthClient.estConnecte()) }
                     var ongletActif by remember { mutableStateOf(Onglet.SESSION) }

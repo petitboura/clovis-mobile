@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.clovis.app.ui.theme.ClovisTheme
 
 const val EXTRA_TITRE_ALERTE = "titre"
 const val EXTRA_CORPS_ALERTE = "corps"
@@ -48,7 +49,7 @@ class AlerteRappelActivity : ComponentActivity() {
         val corps = intent.getStringExtra(EXTRA_CORPS_ALERTE) ?: ""
 
         setContent {
-            MaterialTheme {
+            ClovisTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     EcranAlerte(titre = titre, corps = corps, onFermer = { finish() })
                 }
