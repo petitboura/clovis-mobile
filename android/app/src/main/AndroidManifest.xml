@@ -5,7 +5,7 @@
     session) et Lot 5 (connecteurs tiers) : voir sections marquees ci-dessous.
     Permissions COMMUNES aux deux flavors (play et externe). Toute permission
     specifique a l'accessibilite (lots 6-8) va dans src/externe/AndroidManifest.xml,
-    jamais ici -- voir 00-commun.md.
+    jamais ici, voir 00-commun.md.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -20,7 +20,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <!-- Lot 4, "Acces a la Politique de Notification" : meme famille de
-         permission speciale que PACKAGE_USAGE_STATS ci-dessus -- ne s'accorde
+         permission speciale que PACKAGE_USAGE_STATS ci-dessus : ne s'accorde
          pas via une popup standard, redirection vers Reglages via
          ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS (voir
          ControleSessionRepository.kt). Necessaire pour basculer le Ne pas
@@ -28,23 +28,23 @@
          une session (Android bloque sinon ce dernier avec SecurityException). -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
-    <!-- Lot 3 -- notification standard, obligatoire a partir d'Android 13
+    <!-- Lot 3 : notification standard, obligatoire a partir d'Android 13
          (API 33), demandee au runtime (voir RappelsScreen.kt). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Lot 3 -- alerte plein ecran (categorie ALARM). Declaree ici par
+    <!-- Lot 3 : alerte plein ecran (categorie ALARM). Declaree ici par
          precaution, MAIS voir CanalNotifications.kt : depuis la politique
          Google Play 2025, accordee automatiquement seulement aux apps
-         classees appels/alarme -- Clovis n'en fait pas partie, repli
+         classees appels/alarme : Clovis n'en fait pas partie, repli
          heads-up prevu cote code si refusee. -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
-    <!-- Lot 3 -- visibilite de packages (Android 11+, voir RappelsNatifs.kt
+    <!-- Lot 3 : visibilite de packages (Android 11+, voir RappelsNatifs.kt
          pour le detail de cette restriction et son impact sur l'ouverture
          d'app tierce). Seules les apps natives Horloge/Calendrier sont
          couvertes ici via leurs ACTIONS (pas de package explicite requis) ;
          toute app tierce nommee par l'etudiant necessiterait d'ajouter son
-         package ici un par un -- pas fait tant que Bourama n'a pas confirme
+         package ici un par un : pas fait tant que Bourama n'a pas confirme
          lesquelles. -->
     <queries>
         <intent>
@@ -92,7 +92,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Lot 3 -- cible de l'alerte plein ecran (voir NotificationsNatives.kt).
+        <!-- Lot 3 : cible de l'alerte plein ecran (voir NotificationsNatives.kt).
              exported=false : jamais lancee par une autre app, uniquement en
              interne via PendingIntent. -->
         <activity
@@ -101,7 +101,7 @@
             android:theme="@android:style/Theme.Material.Light.NoActionBar"
             android:excludeFromRecents="true" />
 
-        <!-- Lot 3 -- reception des notifications push (voir
+        <!-- Lot 3 : reception des notifications push (voir
              clovis-backend/core/notifications_push.py). exported=false :
              seul le systeme (via le SDK Firebase) peut demarrer ce service. -->
         <service
@@ -112,7 +112,7 @@
             </intent-filter>
         </service>
 
-        <!-- Lot 3 -- tuile reglages rapides (option A du raccourci "Clovis
+        <!-- Lot 3 : tuile reglages rapides (option A du raccourci "Clovis
              partout", voir ClovisTileService.kt). Permission BIND_QUICK_SETTINGS_TILE
              obligatoire : seul le systeme peut se lier a ce service. -->
         <service
@@ -126,7 +126,7 @@
             </intent-filter>
         </service>
 
-        <!-- Lot 3 -- widget ecran d'accueil (option A du raccourci, voir
+        <!-- Lot 3 : widget ecran d'accueil (option A du raccourci, voir
              ClovisWidgetProvider.kt). -->
         <receiver
             android:name=".notifications.ClovisWidgetProvider"

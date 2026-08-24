@@ -5,6 +5,6 @@
     a ce flavor au Lot 1. Fusionne automatiquement avec src/main lors du
     build (Gradle merge les manifestes par nom de flavor). Ce fichier existe
     des maintenant pour garantir l'etancheite structurelle avec "externe" des
-    le depart -- voir 00-commun.md.
+    le depart : voir 00-commun.md.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" />

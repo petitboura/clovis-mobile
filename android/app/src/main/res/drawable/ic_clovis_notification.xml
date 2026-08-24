@@ -2,7 +2,7 @@
 <!--
     Cree le 23/08/2026, Lot 3. Android impose une icone de notification en
     silhouette blanche/transparente uniquement (toute couleur est ignoree
-    et remplacee par une teinte systeme dans la barre de statut) -- ne
+    et remplacee par une teinte systeme dans la barre de statut) : ne
     JAMAIS reutiliser ic_launcher_foreground.xml ici (multicolore, rendu
     incorrect). Meme forme simplifiee (anneau) que le logo provisoire, en
     silhouette pleine cette fois.
