@@ -2,33 +2,19 @@
 # des identifiants dans ce dépôt (public). Voir android/README-SIGNATURE.md.
 
 # Android
-android/keystore.properties
 android-legacy-natif/keystore.properties
 *.jks
 *.keystore
-android/.gradle/
-android/**/build/
 android-legacy-natif/.gradle/
 android-legacy-natif/**/build/
-android/local.properties
 android-legacy-natif/local.properties
 *.iml
 .idea/
 
 # iOS
-ios/**/xcuserdata/
-ios/**/*.xcuserstate
-ios/**/DerivedData/
 ios-legacy-natif/**/xcuserdata/
 ios-legacy-natif/**/*.xcuserstate
 ios-legacy-natif/**/DerivedData/
-ios/App/Pods/
-
-# Capacitor / conteneur web (Lot 3A) : node_modules et build jamais
-# committes, le site (web/) est un submodule construit a chaque fois.
-node_modules/
-web/out/
-web/.next/
 
 # Générique
 .DS_Store

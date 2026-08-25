@@ -1,5 +1,10 @@
 # Clovis Mobile
 
+> **Note (25/08/2026)** : la fusion Capacitor se fait maintenant dans
+> `clovis-frontend` (voir `android/` là-bas). Ce dépôt garde seulement
+> `android-legacy-natif/` et `ios-legacy-natif/` comme référence pour la
+> migration en plugins. Ne pas relancer de setup Capacitor ici.
+
 Bras armé de Clovis sur le téléphone de l'étudiant (voir `00-commun.md` et
 `01-socle-app-android.md` du chantier "programme adaptatif étudiant, Partie
 3"). Deux projets natifs séparés :
