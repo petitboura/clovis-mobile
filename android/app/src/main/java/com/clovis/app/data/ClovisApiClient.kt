@@ -96,7 +96,11 @@ data class ResultatAction(val succes: Boolean, val resultat: String = "")
 object ClovisApiClient {
 
     private val http = HttpClient(Android) {
-        install(ContentNegotiation) { json() }
+        install(ContentNegotiation) {
+            json(kotlinx.serialization.json.Json {
+                ignoreUnknownKeys = true
+            })
+        }
     }
 
     private suspend fun avecAuth(builder: io.ktor.client.request.HttpRequestBuilder) {
