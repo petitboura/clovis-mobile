@@ -174,13 +174,21 @@ class MainActivity : ComponentActivity() {
      * rappele a chaque connexion, best-effort, pas de retry ici.
      */
     private suspend fun rattraperActionsEnAttente() {
+        // Log temporaire ajoute le 25/08/2026, Bourama : pour diagnostiquer
+        // pourquoi le filet de secours ne semble rien rattraper au test
+        // (voir demande de Bourama). A retirer une fois le vrai probleme
+        // trouve, ce n'est pas un choix definitif.
+        val tag = "RattrapageActions"
         try {
+            android.util.Log.d(tag, "Appel du filet de secours (recuperation des actions en attente)...")
             val actions = ClovisApiClient.obtenirActionsEnAttente().actions
+            android.util.Log.d(tag, "Reponse recue : ${actions.size} action(s) en attente.")
             for (action in actions) {
+                android.util.Log.d(tag, "Execution de l'action ${action.id} (type=${action.type_action})...")
                 com.clovis.app.data.ActionsAppareilExecuteur.executerAction(applicationContext, action.id)
             }
         } catch (e: Exception) {
-            // Pas grave : re-tente a la prochaine connexion.
+            android.util.Log.w(tag, "Echec du filet de secours (pas de retry ici) : ${e}", e)
         }
     }
 }
