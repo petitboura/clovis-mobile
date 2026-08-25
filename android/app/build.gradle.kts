@@ -12,6 +12,9 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    // Ajoute le 25/08/2026, Bourama : voir root build.gradle.kts pour le
+    // pourquoi (generation reelle des serializers @Serializable).
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 // Lot 8 : signature du flavor "externe", lue depuis un fichier LOCAL jamais
