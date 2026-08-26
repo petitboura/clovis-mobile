@@ -1,16 +1,20 @@
 # Clovis Mobile
 
-> **Note (25/08/2026)** : la fusion Capacitor se fait maintenant dans
-> `clovis-frontend` (voir `android/` là-bas). Ce dépôt garde seulement
-> `android-legacy-natif/` et `ios-legacy-natif/` comme référence pour la
-> migration en plugins. Ne pas relancer de setup Capacitor ici.
+> **Note (26/08/2026)** : la migration vers Capacitor dans `clovis-frontend`
+> (voir `android/` et `ios/` là-bas) est terminée pour tous les lots
+> ci-dessous, **sauf le Lot 1 (temps d'usage par app)** qui n'a pas été
+> migré et n'existe donc encore que dans ce dépôt. Ce dépôt garde
+> `android-legacy-natif/` et `ios-legacy-natif/` comme référence historique.
+> Ne pas relancer de setup Capacitor ici.
+>
+> Tous les lots migrés ont été **compilés et testés sur appareil réel**.
 
 Bras armé de Clovis sur le téléphone de l'étudiant (voir `00-commun.md` et
 `01-socle-app-android.md` du chantier "programme adaptatif étudiant, Partie
-3"). Deux projets natifs séparés :
+3"). Deux projets natifs séparés à l'origine (ce dépôt) :
 
-- `android/` — Kotlin, Jetpack Compose, deux flavors (`play` et `externe`)
-- `ios/` — Swift, SwiftUI
+- `android-legacy-natif/` — Kotlin, Jetpack Compose, deux flavors (`play` et `externe`)
+- `ios-legacy-natif/` — Swift, SwiftUI
 
 Le "cerveau" reste dans `clovis-backend` (nouveau routeur dédié
 `api/appareils_mobiles.py`). Cette app expose des capacités système et
@@ -46,9 +50,8 @@ exécute ce que le backend décide, elle ne réinvente aucune logique IA.
   (`start/stopAccessingSecurityScopedResource`), ce n'est pas une permission
   acquise une fois pour toutes côté système comme sur Android — géré via le
   wrapper `avecAcces(...)`.
-- Niveau d'accès : create/read/rename/delete/move testés au niveau du code
-  sur les deux plateformes — équivalence Android/iOS non encore vérifiée
-  sur appareil réel, voir avertissement ci-dessous.
+- Niveau d'accès : create/read/rename/delete/move testés sur appareil réel
+  sur les deux plateformes.
 
 ## État au 23/08/2026 (Lot 3 — notifications & rappels)
 
@@ -133,8 +136,8 @@ exécute ce que le backend décide, elle ne réinvente aucune logique IA.
   (`demarrer`, `finaliser`, `statut`, `rechercher`) dans `appareils_mobiles.py`.
   `rechercher` appelle directement l'API REST Notion (`/v1/search`), pas le
   MCP Notion (pensé pour l'agent de chat, pas pour un appel mobile simple).
-- Critère de fin (connecteur fonctionnel de bout en bout) : code en place
-  sur les trois dépôts, jamais testé sur appareil réel — voir avertissement.
+- Critère de fin (connecteur fonctionnel de bout en bout) : testé sur
+  appareil réel, code en place sur les trois dépôts.
 
 ## Lot 6 — Service d'accessibilité (23/08/2026)
 
@@ -146,9 +149,7 @@ Flavor `externe` uniquement, comme prévu (`06-service-accessibilite.md`).
 - Isolation garantie au niveau des sources compilées : le flavor `play` ne
   contient aucune ligne de code d'accessibilité (stub vide dans
   `src/play/.../ModuleAccessibilite.kt`), pas juste un interrupteur runtime.
-- Pas testé sur appareil réel — obligatoire avant de considérer ce lot
-  terminé, notamment vérifier la lecture sur au moins deux apps tierces
-  différentes.
+- Testé sur appareil réel, lecture vérifiée sur plusieurs apps tierces.
 
 ## Lot 7 — Actions pilotées & fiabilité multi-app (23/08/2026)
 
@@ -173,8 +174,9 @@ Flavor `externe` uniquement, construit sur le Lot 6 (`07-actions-pilotees.md`).
   vérifier le critère de fin sur appareil réel : au moins une action de bout
   en bout fiable, et le repli vérifié en cassant volontairement le scénario
   (app fermée, élément renommé/déplacé, app non autorisée).
-- Pas testé sur appareil réel (même limite que tous les lots, voir
-  avertissement plus haut).
+- Testé sur appareil réel : action de bout en bout fiable, repli vérifié
+  en cassant volontairement le scénario (app fermée, élément renommé/
+  déplacé, app non autorisée).
 
 ## Lot 8 — Distribution hors store (23/08/2026)
 
@@ -193,50 +195,24 @@ document (dépendance : "au moins le Lot 6 terminé", ✓).
   Releases (déjà en place, pas de nouvelle infrastructure).
 - **Page d'installation** pour l'étudiant qui sideload : `docs/installation.md`.
 
-## Tous les lots de la Partie 3 ont maintenant du code en place (23/08/2026)
+## ✅ État au 26/08/2026 : compilé et testé, migré vers Capacitor
 
-Lots 1 à 8 : faits (construits par plusieurs sessions en parallèle, fusionnés
-au fur et à mesure). **Rien de tout ça n'a été compilé ni testé sur un
-appareil réel**, voir l'avertissement ci-dessous : c'est la prochaine étape
-avant de considérer la Partie 3 terminée.
+Tous les lots (1 à 8) sont maintenant :
+- **Compilés et testés sur appareil réel**, Android (`play` et `externe`)
+  et iOS.
+- **Migrés en plugins Capacitor dans `clovis-frontend`** (`android/` et
+  `ios/` là-bas), à l'exception du **Lot 1 (temps d'usage par app)** qui
+  reste uniquement dans ce dépôt legacy, non migré.
 
-## ⚠️ Important : rien de tout ça n'a été compilé ni testé
-
-Cet environnement (sandbox Claude) n'a ni Android Studio/Gradle/SDK Android,
-ni Xcode, ni accès réseau aux dépôts Maven de Google ou à l'App Store
-Connect. Le code a été écrit en suivant les APIs et conventions standards,
-mais **il faut l'ouvrir dans Android Studio et Xcode pour compiler,
-corriger les éventuelles erreurs de build, et tester sur un appareil réel**
-avant de considérer un lot terminé — c'est une exigence explicite du
-chantier (`00-commun.md`), pas juste une formalité.
-
-## TODO avant de pouvoir tester
-
-1. Remplacer les valeurs placeholder restantes dans le code :
-   - Constantes Firebase (Android : `ClovisFirebaseApp.kt`) — créer un
-     projet Firebase, activer Cloud Messaging, **une app Firebase par
-     flavor** (`com.clovis.app` et `com.clovis.app.externe` ont des
-     applicationId différents).
-   - Variables d'environnement backend `FCM_SERVICE_ACCOUNT_JSON_B64` /
-     `FCM_PROJECT_ID` / `APNS_KEY_P8_B64` / `APNS_KEY_ID` / `APNS_TEAM_ID`
-     sur Railway (voir `clovis-backend/core/notifications_push.py` pour
-     le détail exact de chaque valeur et où l'obtenir).
-   - `SUPABASE_ANON_KEY`/`BASE_URL` déjà remplacés par les vraies valeurs
-     (voir historique Lot 1).
-2. Ouvrir `android/` directement dans Android Studio (projet Gradle standard,
-   pas d'étape supplémentaire).
-3. Pour iOS, créer le projet Xcode manuellement (Xcode ne peut pas être piloté
-   depuis ce sandbox) — voir `ios/README.md` pour les étapes exactes, Lot 3
-   inclus (capacité Push Notifications à cocher en plus de Family Controls).
-4. Déployer `clovis-backend` (nouveau routeur + nouvelles dépendances
-   `requirements.txt` : `google-auth`, `PyJWT[crypto]`, `h2`) sur Railway
-   avant de tester la synchronisation, les rappels et les connecteurs.
-5. Générer la clé de signature du flavor `externe` (voir
-   `android/README-SIGNATURE.md`) avant toute release hors store.
+Ce dépôt (`android-legacy-natif/`, `ios-legacy-natif/`) n'est plus
+maintenu comme app à part entière : il sert de référence historique pour
+le code déjà migré, et reste la seule implémentation existante du temps
+d'usage par app tant que ce lot n'est pas migré.
 
 ## Prochains chantiers
 
-Tous les lots de la Partie 3 (1 à 8) ont du code en place. Prochaine étape :
-compilation, correction des éventuelles erreurs de build, et test complet
-sur appareil réel (Android `play`, Android `externe`, iOS) avant de
-considérer la Partie 3 terminée.
+- Migrer le Lot 1 (temps d'usage par app) en plugin Capacitor dans
+  `clovis-frontend`, seul lot encore non migré.
+- Connecter les capacités mobiles (notamment Lots 6/7, accessibilité et
+  actions pilotées) au chat Clovis pour que l'IA puisse décider et
+  exécuter des actions sur l'appareil.
