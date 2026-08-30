@@ -42,10 +42,7 @@
     <!-- Lot 3 : visibilite de packages (Android 11+, voir RappelsNatifs.kt
          pour le detail de cette restriction et son impact sur l'ouverture
          d'app tierce). Seules les apps natives Horloge/Calendrier sont
-         couvertes ici via leurs ACTIONS (pas de package explicite requis) ;
-         toute app tierce nommee par l'etudiant necessiterait d'ajouter son
-         package ici un par un : pas fait tant que Bourama n'a pas confirme
-         lesquelles. -->
+         couvertes ici via leurs ACTIONS (pas de package explicite requis). -->
     <queries>
         <intent>
             <action android:name="android.intent.action.SET_ALARM" />
@@ -53,6 +50,21 @@
         <intent>
             <action android:name="android.intent.action.INSERT" />
             <data android:mimeType="vnd.android.cursor.item/event" />
+        </intent>
+
+        <!-- Ajoute le 30/08/2026, Bourama : sans ce bloc, Android 11+ refuse
+             de donner le nom lisible (ex "Instagram") des autres applis a
+             UsageStatsRepository (temps d'ecran) et EcranAccessibilite
+             (journal debug), qui retombaient alors sur le nom technique brut
+             (ex "com.instagram.android"). Ce bloc autorise generiquement
+             Clovis a voir toute appli qui peut etre ouverte depuis l'ecran
+             d'accueil (meme mecanisme deja utilise dans
+             EcranAccessibilite.listerAppsLancables, voir commentaire
+             a cet endroit) -- forme acceptee par le Play Store, contrairement
+             a la permission QUERY_ALL_PACKAGES qui elle est tres restreinte. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
         </intent>
     </queries>
 

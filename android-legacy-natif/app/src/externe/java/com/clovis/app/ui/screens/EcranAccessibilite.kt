@@ -34,6 +34,7 @@ import com.clovis.app.accessibilite.ExecuteurActions
 import com.clovis.app.accessibilite.JournalAccessibilite
 import com.clovis.app.accessibilite.JournalActions
 import com.clovis.app.accessibilite.ServiceAccessibiliteClovis
+import com.clovis.app.BuildConfig
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -87,16 +88,27 @@ fun EcranAccessibilite() {
                     Text("Service actif.", style = MaterialTheme.typography.bodyLarge)
                     Spacer(Modifier.height(16.dp))
                     SectionAppsAutorisees(context)
-                    Spacer(Modifier.height(16.dp))
-                    SectionTestAction()
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        "Journal des dernières observations, pour vérifier que tout fonctionne :",
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                    Spacer(Modifier.height(8.dp))
                 }
-                items(entrees) { entree -> LigneObservation(entree) }
+                // Ajoute le 30/08/2026, Bourama : le journal de debug (et le
+                // panneau de test manuel cliquer/saisir juste au dessus) ne
+                // sert qu'a Bourama pour verifier que le service fonctionne
+                // (voir commentaire d'origine du fichier, "audit/debug") --
+                // l'etudiant, lui, n'en fait rien. Reserve desormais aux
+                // builds debug, jamais visible sur un telephone d'etudiant
+                // (build release).
+                if (BuildConfig.DEBUG) {
+                    item {
+                        Spacer(Modifier.height(16.dp))
+                        SectionTestAction(context)
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            "Journal des dernières observations, pour vérifier que tout fonctionne :",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                        Spacer(Modifier.height(8.dp))
+                    }
+                    items(entrees) { entree -> LigneObservation(context, entree) }
+                }
             }
         }
     }
@@ -154,7 +166,7 @@ private fun SectionAppsAutorisees(context: Context) {
  * quand on casse volontairement le scenario).
  */
 @Composable
-private fun SectionTestAction() {
+private fun SectionTestAction(context: Context) {
     var texteCible by remember { mutableStateOf("") }
     var valeurSaisie by remember { mutableStateOf("") }
     var dernierResultat by remember { mutableStateOf<String?>(null) }
@@ -194,15 +206,24 @@ private fun SectionTestAction() {
     Spacer(Modifier.height(8.dp))
     Text("Dernières tentatives d'action :", style = MaterialTheme.typography.labelMedium)
     Column {
-        actions.take(5).forEach { entree -> LigneAction(entree) }
+        actions.take(5).forEach { entree -> LigneAction(context, entree) }
     }
 }
 
+/** Nom lisible d'un paquet (ex "Instagram"), ou le nom technique en repli si
+ * introuvable (app desinstallee entre temps, etc). Usage debug uniquement. */
+private fun nomLisiblePaquet(context: Context, paquet: String): String = try {
+    val pm = context.packageManager
+    pm.getApplicationLabel(pm.getApplicationInfo(paquet, 0)).toString()
+} catch (e: PackageManager.NameNotFoundException) {
+    paquet
+}
+
 @Composable
-private fun LigneObservation(entree: EntreeJournal) {
+private fun LigneObservation(context: Context, entree: EntreeJournal) {
     val format = remember { SimpleDateFormat("HH:mm:ss", Locale.getDefault()) }
     Column(modifier = Modifier.padding(vertical = 6.dp)) {
-        Text("${format.format(Date(entree.horodatage))} — ${entree.nomPaquet}")
+        Text("${format.format(Date(entree.horodatage))} — ${nomLisiblePaquet(context, entree.nomPaquet)}")
         Text(
             "${entree.typeEvenement}, ${entree.nombreNoeudsLus} éléments lus",
             style = MaterialTheme.typography.bodySmall
@@ -212,12 +233,12 @@ private fun LigneObservation(entree: EntreeJournal) {
 }
 
 @Composable
-private fun LigneAction(entree: EntreeAction) {
+private fun LigneAction(context: Context, entree: EntreeAction) {
     val format = remember { SimpleDateFormat("HH:mm:ss", Locale.getDefault()) }
     val couleur = if (entree.succes) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         Text(
-            "${format.format(Date(entree.horodatage))} — ${entree.nomPaquet} — ${if (entree.succes) "OK" else "ÉCHEC"}",
+            "${format.format(Date(entree.horodatage))} — ${nomLisiblePaquet(context, entree.nomPaquet)} — ${if (entree.succes) "OK" else "ÉCHEC"}",
             color = couleur,
             style = MaterialTheme.typography.bodySmall
         )
