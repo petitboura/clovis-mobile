@@ -62,7 +62,7 @@ data class ReponseFinalisationNotion(val connecte: Boolean, val espace: String? 
 data class StatutNotion(val connecte: Boolean)
 
 @Serializable
-data class ResultatNotion(val id: String, val type: String, val url: String? = null)
+data class ResultatNotion(val id: String, val type: String, val url: String? = null, val titre: String? = null)
 
 @Serializable
 data class ReponseRechercheNotion(val resultats: List<ResultatNotion>)

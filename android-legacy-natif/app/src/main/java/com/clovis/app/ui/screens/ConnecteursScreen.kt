@@ -24,6 +24,16 @@ import com.clovis.app.data.ResultatNotion
 import com.clovis.app.ui.RetourOAuth
 import kotlinx.coroutines.launch
 
+// Ajoute le 30/08/2026, Bourama : repli uniquement pour le rare cas ou
+// Notion ne renvoie aucun texte de titre (page/base vide) -- le titre reel
+// est desormais fourni par le backend, voir _titre_resultat_notion cote
+// clovis-backend (api/appareils_mobiles.py).
+private fun libelleTypeNotion(type: String): String = when (type) {
+    "page" -> "Page"
+    "database" -> "Base de données"
+    else -> type
+}
+
 @Composable
 fun ConnecteursScreen() {
     val context = LocalContext.current
@@ -148,7 +158,7 @@ fun ConnecteursScreen() {
                     LazyColumn {
                         items(resultats) { resultat ->
                             Text(
-                                "${resultat.type} — ${resultat.id}",
+                                resultat.titre ?: "${libelleTypeNotion(resultat.type)} sans titre",
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(vertical = 4.dp)
                             )
